@@ -1,19 +1,37 @@
 name: in_between
 description: "A new Flutter project."
-publish_to: 'none'
-version: 0.1.0
+publish_to: "none"
+version: 1.0.0+1
 
 environment:
-  sdk: ^3.7.2
+  sdk: ^3.7.0
 
 dependencies:
   flutter:
     sdk: flutter
+  flutter_bloc: ^9.0.0
+  bloc: ^9.0.0
+  meta: ^1.16.0
+  google_fonts: ^6.2.1
+  carousel_slider: ^5.0.0
+  transformer_page_view_tv: ^0.1.7-nullsafety
+  smooth_page_indicator: ^1.2.1
+  go_router: ^15.1.1
+  hive: ^2.2.3
+  path_provider: ^2.0.11
+  hive_flutter: ^1.1.0
+
+  cupertino_icons: ^1.0.8
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
+  hive_generator: ^1.1.3
+  build_runner: ^2.4.0
 
 flutter:
   uses-material-design: true
+
+  assets:
+    - assets/images/
