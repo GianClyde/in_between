@@ -14,3 +14,5 @@ final class RegistrationLoaded extends RegistrationState {
 final class RegistrationSuccess extends RegistrationState {}
 
 final class RegistrationFail extends RegistrationState {}
+
+final class RegistrationIncomplete extends RegistrationState {}

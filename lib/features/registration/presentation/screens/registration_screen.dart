@@ -27,7 +27,11 @@ class RegistrationScreen extends StatelessWidget {
         } else if (state is RegistrationFail) {
           ScaffoldMessenger.of(
             context,
-          ).showSnackBar(SnackBar(content: Text('Ekis bobo kulang field mo')));
+          ).showSnackBar(SnackBar(content: Text('User Exists')));
+        } else if (state is RegistrationIncomplete) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text('Please fill in all fields!')));
         }
       },
       child: Scaffold(
@@ -106,23 +110,17 @@ class RegistrationScreen extends StatelessWidget {
                     final mobile = regmobilenumController.text.trim();
                     final bdate = regBdateController.text.trim();
 
-                    if (name.isNotEmpty &&
-                        username.isNotEmpty &&
-                        password.isNotEmpty &&
-                        mobile.isNotEmpty &&
-                        bdate.isNotEmpty) {
-                      context.read<RegistrationBloc>().add(
-                        AddUser(
-                          UserModel(
-                            name: name,
-                            username: username,
-                            mobile: mobile,
-                            password: password,
-                            bdate: bdate,
-                          ),
+                    context.read<RegistrationBloc>().add(
+                      AddUser(
+                        UserModel(
+                          name: name,
+                          username: username,
+                          mobile: mobile,
+                          password: password,
+                          bdate: bdate,
                         ),
-                      );
-                    }
+                      ),
+                    );
 
                     print('Registered Clicked');
                   },

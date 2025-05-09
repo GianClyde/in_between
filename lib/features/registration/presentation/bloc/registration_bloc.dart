@@ -17,6 +17,14 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
 
     on<AddUser>((event, state) async {
       // await registrationRepo.addUser(event.user);
+      if (event.user.name.isEmpty ||
+          event.user.username.isEmpty ||
+          event.user.password.isEmpty ||
+          event.user.mobile.isEmpty ||
+          event.user.bdate.isEmpty) {
+        emit(RegistrationIncomplete()); // Trigger error state
+        return;
+      }
       bool isAdded = await registrationRepo.addUser(event.user);
       if (isAdded) {
         emit(RegistrationSuccess());
@@ -24,9 +32,5 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
         emit(RegistrationFail());
       }
     });
-
-    // on<IsFilled>((event, state) {
-    //   final IsFilled = registrationRepo
-    // });
   }
 }
