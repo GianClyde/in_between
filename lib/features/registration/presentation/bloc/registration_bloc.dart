@@ -15,7 +15,7 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
       emit(RegistrationLoaded(userData: users));
     });
 
-    on<AddUser>((event, state) async {
+    on<AddUser>((event, emit) async {
       // await registrationRepo.addUser(event.user);
       if (event.user.name.isEmpty ||
           event.user.username.isEmpty ||

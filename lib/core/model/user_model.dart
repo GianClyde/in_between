@@ -19,11 +19,15 @@ class UserModel extends HiveObject {
   @HiveField(4)
   String bdate;
 
+  @HiveField(5)
+  double credits;
+
   UserModel({
     required this.username,
     required this.password,
     required this.name,
     required this.mobile,
     required this.bdate,
+    this.credits = 0,
   });
 }
