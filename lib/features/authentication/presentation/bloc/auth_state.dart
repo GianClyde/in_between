@@ -6,9 +6,11 @@ sealed class AuthState {}
 final class AuthInitial extends AuthState {}
 
 class UserLoaded extends AuthState {
-  final List<UserModel> users;
+  final UserEntity users;
   UserLoaded(this.users);
 }
+
+class UserNotLoaded extends AuthState {}
 
 class UserValid extends AuthState {}
 

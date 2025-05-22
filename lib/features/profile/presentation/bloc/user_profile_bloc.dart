@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:in_between/core/domain/user_entity.dart';
 import 'package:in_between/core/model/user_model.dart';
 import 'package:in_between/features/profile/domain/user_profile_repo.dart';
 import 'package:meta/meta.dart';
@@ -14,7 +15,7 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
         (user) =>
             user.username == event.username && user.password == event.password,
       );
-      emit(UserDataLoaded([userProfile]));
+      emit(UserDataLoaded(userProfile.toEntity()));
     });
   }
 }

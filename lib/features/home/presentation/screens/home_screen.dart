@@ -17,137 +17,87 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<String> rooms = ['Room 1', 'Room 2', 'Room 3', 'Room 4'];
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.black,
-        iconTheme: IconThemeData(color: Colors.white),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        SizedBox(
+          height: 200,
+          child: TransformerPageView(
+            pageSnapping: true,
+            pageController: controller,
+            itemCount: rooms.length,
+            transformer: PageTransformerBuilder(
+              builder: (Widget child, TransformInfo info) {
+                double scale =
+                    1 - (0.15 * info.position!.abs()); // Shrink side cards
+                double depth = info.position! * -30; // Push side cards backward
+                double angle =
+                    info.position! * 0.12; // Slight rotation for perspective
+                double offsetX = info.position! * -25;
 
-        actions: [
-          Text('Php 3000', style: TextStyle(color: Colors.white)),
-          IconButton(
-            onPressed: () {
-              context.go(Routes.cashinoutScreen);
-            },
-            icon: Icon(Icons.add_box_rounded),
-          ),
-        ],
-      ),
-      drawer: Drawer(
-        backgroundColor: Color(0xffffb53d),
-        child: ListView(
-          children: [
-            ListTile(
-              leading: Icon(Icons.person),
-              title: Text("Profile"),
-              onTap: () {
-                context.go(Routes.profileScreen);
+                return Transform(
+                  alignment: Alignment.center,
+                  transform:
+                      Matrix4.identity()
+                        ..setEntry(3, 2, 0.001) // Perspective effect
+                        ..translate(
+                          offsetX,
+                          // info.position! * -30,
+                          0.2,
+                          depth,
+                        ) // Push cards backward
+                        ..rotateY(angle), // Slight horizontal tilt
+                  child: Opacity(
+                    opacity:
+                        info.position!.abs() > 1
+                            ? 0.5
+                            : 1, // Fade side cards a little
+                    child: Transform.scale(scale: scale, child: child),
+                  ),
+                );
               },
             ),
-            ListTile(
-              leading: Icon(Icons.settings),
-              title: Text("Settings"),
-              onTap: () {},
-            ),
-          ],
-        ),
-      ),
-
-      body: Container(
-        padding: EdgeInsets.all(16),
-        width: double.infinity,
-        height: double.infinity,
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage(ImagePaths.bg.path),
-            fit: BoxFit.cover,
-          ),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            SizedBox(
-              height: 200,
-              child: TransformerPageView(
-                pageSnapping: true,
-                pageController: controller,
-                itemCount: rooms.length,
-                transformer: PageTransformerBuilder(
-                  builder: (Widget child, TransformInfo info) {
-                    double scale =
-                        1 - (0.15 * info.position!.abs()); // Shrink side cards
-                    double depth =
-                        info.position! * -30; // Push side cards backward
-                    double angle =
-                        info.position! *
-                        0.12; // Slight rotation for perspective
-                    double offsetX = info.position! * -25;
-
-                    return Transform(
-                      alignment: Alignment.center,
-                      transform:
-                          Matrix4.identity()
-                            ..setEntry(3, 2, 0.001) // Perspective effect
-                            ..translate(
-                              offsetX,
-                              // info.position! * -30,
-                              0.2,
-                              depth,
-                            ) // Push cards backward
-                            ..rotateY(angle), // Slight horizontal tilt
-                      child: Opacity(
-                        opacity:
-                            info.position!.abs() > 1
-                                ? 0.5
-                                : 1, // Fade side cards a little
-                        child: Transform.scale(scale: scale, child: child),
-                      ),
-                    );
+            itemBuilder: (context, index) {
+              return Align(
+                alignment: Alignment.center,
+                child: SliderBg(
+                  index: rooms[index].toString(),
+                  onPressed: () {
+                    context.go(Routes.gameZoneScreen);
                   },
                 ),
-                itemBuilder: (context, index) {
-                  return Align(
-                    alignment: Alignment.center,
-                    child: SliderBg(
-                      index: rooms[index].toString(),
-                      onPressed: () {
-                        context.go(Routes.gameZoneScreen);
-                      },
-                    ),
-                  );
-                },
-              ),
+              );
+            },
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.only(top: 3, bottom: 8),
+          child: SmoothPageIndicator(
+            controller: controller,
+            count: rooms.length,
+            effect: SwapEffect(
+              dotColor: Colors.grey,
+              activeDotColor: Color(0xffd5bc79),
+              dotHeight: 8,
+              dotWidth: 8,
             ),
-            Padding(
-              padding: EdgeInsets.only(top: 3, bottom: 8),
-              child: SmoothPageIndicator(
-                controller: controller,
-                count: rooms.length,
-                effect: SwapEffect(
-                  dotColor: Colors.grey,
-                  activeDotColor: Color(0xffd5bc79),
-                  dotHeight: 8,
-                  dotWidth: 8,
-                  // paintStyle: PaintingStyle.stroke,
+          ),
+        ),
+
+        Text('History', textAlign: TextAlign.start),
+        Expanded(
+          child: CustomScrollView(
+            slivers: [
+              SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) => HistoryTile(index: index),
+                  childCount: 7,
                 ),
               ),
-            ),
-
-            Text('History', textAlign: TextAlign.start),
-            Expanded(
-              child: CustomScrollView(
-                slivers: [
-                  SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                      (context, index) => HistoryTile(index: index),
-                      childCount: 7,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
+      ],
     );
   }
 }

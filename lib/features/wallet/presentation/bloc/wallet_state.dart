@@ -5,7 +5,10 @@ sealed class WalletState {}
 
 final class WalletInitial extends WalletState {}
 
-final class CashInSuccess extends WalletState {}
+final class CashInSuccess extends WalletState {
+  final UserEntity credit;
+  CashInSuccess(this.credit);
+}
 
 final class CashInFail extends WalletState {}
 

@@ -1,47 +1,35 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'user_model.dart';
+part of 'auth_model.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class UserModelAdapter extends TypeAdapter<UserModel> {
+class AuthModelAdapter extends TypeAdapter<AuthModel> {
   @override
-  final int typeId = 1;
+  final int typeId = 2;
 
   @override
-  UserModel read(BinaryReader reader) {
+  AuthModel read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return UserModel(
+    return AuthModel(
       username: fields[0] as String,
       password: fields[1] as String,
-      name: fields[2] as String,
-      mobile: fields[3] as String,
-      bdate: fields[4] as String,
-      credits: fields[5] as double,
     );
   }
 
   @override
-  void write(BinaryWriter writer, UserModel obj) {
+  void write(BinaryWriter writer, AuthModel obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(2)
       ..writeByte(0)
       ..write(obj.username)
       ..writeByte(1)
-      ..write(obj.password)
-      ..writeByte(2)
-      ..write(obj.name)
-      ..writeByte(3)
-      ..write(obj.mobile)
-      ..writeByte(4)
-      ..write(obj.bdate)
-      ..writeByte(5)
-      ..write(obj.credits);
+      ..write(obj.password);
   }
 
   @override
@@ -50,7 +38,7 @@ class UserModelAdapter extends TypeAdapter<UserModel> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is UserModelAdapter &&
+      other is AuthModelAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

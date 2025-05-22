@@ -6,7 +6,7 @@ sealed class UserProfileState {}
 final class UserProfileInitial extends UserProfileState {}
 
 final class UserDataLoaded extends UserProfileState {
-  final List<UserModel> userData;
+  final UserEntity userData;
   UserDataLoaded(this.userData);
 }
 

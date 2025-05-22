@@ -2,9 +2,9 @@ import 'package:hive_flutter/adapters.dart';
 import 'package:in_between/core/model/user_model.dart';
 
 class UserProfileRepo {
-  final Box<UserModel> userBox = Hive.box<UserModel>('registrationBox');
+  final Box<UserModel> userBox = Hive.box<UserModel>('userBox');
 
-  List<UserModel> getUsers() {
-    return userBox.values.toList();
+  Iterable<UserModel> getUsers() {
+    return userBox.values;
   }
 }
