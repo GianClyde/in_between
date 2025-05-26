@@ -20,6 +20,7 @@ class UserModel extends UserEntity {
       'mobile': mobile,
       'bdate': bdate,
       'credit': credits,
+      'type': "user",
     };
   }
 
