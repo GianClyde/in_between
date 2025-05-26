@@ -10,6 +10,7 @@ import 'package:in_between/features/authentication/presentation/bloc/auth_bloc.d
 import 'package:in_between/features/profile/domain/user_profile_repo.dart';
 import 'package:in_between/features/profile/presentation/bloc/user_profile_bloc.dart';
 import 'package:in_between/features/registration/data/data_source/registration_local_datasource.dart';
+import 'package:in_between/features/registration/data/data_source/registration_remote_datasource.dart';
 import 'package:in_between/features/registration/data/repository/registration_repo_imp.dart';
 import 'package:in_between/features/registration/domain/repository/i_reg_repo.dart';
 import 'package:in_between/features/registration/domain/usecase/add_new_user_usecase.dart';
@@ -21,6 +22,8 @@ import 'package:in_between/features/wallet/data/repository/wallet_imp_repo.dart'
 import 'package:in_between/features/wallet/domain/repository/i_wallet_repo.dart';
 import 'package:in_between/features/wallet/domain/usecase/update_credit_usecase.dart';
 import 'package:in_between/features/wallet/presentation/bloc/wallet_bloc.dart';
+import 'package:web_socket_channel/io.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
 
 final sl = GetIt.instance;
 //  GetIt sl = GetIt.instance;
@@ -44,15 +47,34 @@ Future<void> setUpDependencies() async {
   sl.registerLazySingleton(() => AuthenticationLocalDatasource());
   sl.registerLazySingleton(() => WalletLocalDatasource());
 
+  //remote data source
+  sl.registerFactory<RegisterRemoteDataSource>(
+    () => RegistrationRemoteDatasourceImpl(channel: sl()),
+  );
+
+  //channel
+  sl.registerLazySingleton<WebSocketChannel>(() {
+    final channel = IOWebSocketChannel.connect('ws://192.168.1.3:8080');
+    return channel;
+  }, dispose: (channel) => channel.sink.close());
+
   //repository
   sl.registerLazySingleton<RegistrationRepoImp>(
-    () => RegistrationRepoImp(sl()),
+    () => RegistrationRepoImp(
+      localDatasource: sl(),
+      registerRemoteDataSource: sl(),
+    ),
   );
   sl.registerLazySingleton<AuthenticationRepoImplementation>(
     () => AuthenticationRepoImplementation(sl()),
   );
 
-  sl.registerLazySingleton<IRegistrationRepo>(() => RegistrationRepoImp(sl()));
+  sl.registerLazySingleton<IRegistrationRepo>(
+    () => RegistrationRepoImp(
+      localDatasource: sl(),
+      registerRemoteDataSource: sl(),
+    ),
+  );
   sl.registerLazySingleton<IAuthenticationRepo>(
     () => AuthenticationRepoImplementation(sl()),
   );
