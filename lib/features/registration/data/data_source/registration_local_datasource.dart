@@ -7,7 +7,6 @@ class RegistrationLocalDatasource {
   // final Box<UserModel> regBox;
   // RegistrationLocalDatasource(this.regBox);
 
-
   Future<void> addNewUser(UserEntity user) async {
     await regBox.put(user.username, UserModel.fromEntity(user));
     // return user;

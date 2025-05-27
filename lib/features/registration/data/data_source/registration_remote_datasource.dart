@@ -12,10 +12,10 @@ class RegistrationRemoteDatasourceImpl implements RegisterRemoteDataSource {
   RegistrationRemoteDatasourceImpl({required this.channel});
   @override
   Future<void> addNewUser({required UserModel newUser}) async {
-    final message = newUser.toJson();
+    final data = newUser.toJson();
 
     try {
-      channel.sink.add(message);
+      channel.sink.add(data);
     } catch (e) {
       print("ERROR: ${e.toString()}");
     }

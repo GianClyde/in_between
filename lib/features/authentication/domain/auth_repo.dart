@@ -1,5 +1,6 @@
 import 'package:hive/hive.dart';
-import 'package:in_between/core/model/user_model.dart';
+import 'package:in_between/features/registration/data/model/user_model.dart' show UserModel;
+
 
 class Authrepo {
   final Box<UserModel> registrationBox = Hive.box<UserModel>('registrationBox');

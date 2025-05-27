@@ -7,6 +7,10 @@ class GetUserUsecase {
   GetUserUsecase(this.iAuthRepo);
 
   Future<UserEntity?> execute(String username, String password) async {
-    return await iAuthRepo.getUser(username, password);
+    print("USER usecase triggered");
+
+    final user = await iAuthRepo.getUser(username, password);
+    print("USER usecase user contains $user");
+    return user;
   }
 }

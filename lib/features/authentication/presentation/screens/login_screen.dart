@@ -20,13 +20,17 @@ class LoginScreen extends StatelessWidget {
 
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
-        if (state is UserLoaded) {
-          context.read<UserCubit>().setUser(state.users);
+        if (state is AuthSuccess) {
+          context.read<UserCubit>().setUser(state.user);
           context.go(Routes.homeScreen);
-        } else if (state is UserInvalid || state is UserNotLoaded) {
+        } else if (state is AuthFailed) {
           ScaffoldMessenger.of(
             context,
-          ).showSnackBar(SnackBar(content: Text('Invalid Credentials')));
+          ).showSnackBar(SnackBar(content: Text('${state.error}')));
+        } else {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text("Loading")));
         }
       },
       child: Padding(

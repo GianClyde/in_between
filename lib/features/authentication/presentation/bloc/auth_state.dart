@@ -5,13 +5,16 @@ sealed class AuthState {}
 
 final class AuthInitial extends AuthState {}
 
-class UserLoaded extends AuthState {
-  final UserEntity users;
-  UserLoaded(this.users);
+class AuthLoading extends AuthState {}
+
+class AuthSuccess extends AuthState {
+  final UserEntity user;
+
+  AuthSuccess({required this.user});
 }
 
-class UserNotLoaded extends AuthState {}
+class AuthFailed extends AuthState {
+  final String error;
 
-class UserValid extends AuthState {}
-
-class UserInvalid extends AuthState {}
+  AuthFailed({required this.error});
+}

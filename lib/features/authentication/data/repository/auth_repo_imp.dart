@@ -1,27 +1,25 @@
-import 'package:in_between/core/domain/user_entity.dart';
 import 'package:in_between/features/authentication/data/data_source/auth_local_datasource.dart';
+import 'package:in_between/features/authentication/data/data_source/auth_remote_datasource.dart';
 import 'package:in_between/features/authentication/domain/repository/i_auth_repo.dart';
+import 'package:in_between/features/registration/data/model/user_model.dart';
 
 class AuthenticationRepoImplementation implements IAuthenticationRepo {
   final AuthenticationLocalDatasource localDatasource;
-  AuthenticationRepoImplementation(this.localDatasource);
+  final AuthRemoteDatasource authRemoteDatasource;
+  AuthenticationRepoImplementation({
+    required this.localDatasource,
+    required this.authRemoteDatasource,
+  });
 
   @override
-  Future<UserEntity?> getUser(String username, String password) async {
-    var users =  localDatasource.getUsers();
-    final matchingUser = users.where(
-      (user) => user.username == username && user.password == password,
-    ).toList();
-
-    if (matchingUser.isEmpty) return null;
-    return matchingUser.first.toEntity();
-  }
-
-  @override
-  Future<bool> isValid(String username, String password) async {
-    return localDatasource.getUsers().any(
-      (user) => user.username == username && user.password == password,
+  Future<UserModel?> getUser(String username, String password) async {
+    final UserModel? user = await authRemoteDatasource.getUser(
+      username: username,
+      password: password,
     );
+
+    print("USER repo impl triggered");
+    return user;
   }
 }
 
