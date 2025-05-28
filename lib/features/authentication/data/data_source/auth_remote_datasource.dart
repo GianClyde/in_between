@@ -39,6 +39,7 @@ class AuthRemoteDataSourceImpl extends AuthRemoteDatasource {
                   (user['username'].toString().trim() == username.trim() &&
                       user['password'].toString().trim() == password.trim())) {
                 final userModel = UserModel(
+                  userId: user['userId'],
                   username: user['username'],
                   password: user['password'],
                   name: user['name'],
