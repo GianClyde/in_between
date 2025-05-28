@@ -1,12 +1,10 @@
 import 'dart:async';
-import 'dart:convert';
 
-import 'package:in_between/core/error/server_exception.dart';
-import 'package:in_between/features/registration/data/model/wallet_model.dart';
+import 'package:in_between/core/web_socket/web_socket.dart';
 import 'package:uuid/uuid.dart';
-import 'package:web_socket_channel/web_socket_channel.dart';
-
+import 'package:in_between/core/error/server_exception.dart';
 import 'package:in_between/features/registration/data/model/user_model.dart';
+import 'package:in_between/features/registration/data/model/wallet_model.dart';
 
 abstract interface class RegisterRemoteDataSource {
   Future<UserModel?> addNewUser({required UserModel newUser});
@@ -15,16 +13,14 @@ abstract interface class RegisterRemoteDataSource {
 }
 
 class RegistrationRemoteDatasourceImpl implements RegisterRemoteDataSource {
-  final WebSocketChannel channel;
+  final WebSocketService _webSocket;
 
-  RegistrationRemoteDatasourceImpl({required this.channel});
+  RegistrationRemoteDatasourceImpl(this._webSocket);
+
   @override
   Future<UserModel?> addNewUser({required UserModel newUser}) async {
-    final data = newUser.toJson();
-
     try {
-      channel.sink.add(data);
-
+      _webSocket.send({'type': 'register_user', 'user': newUser.toJson()});
       return newUser;
     } catch (e) {
       print("ERROR: ${e.toString()}");
@@ -37,82 +33,36 @@ class RegistrationRemoteDatasourceImpl implements RegisterRemoteDataSource {
     final completer = Completer<bool>();
     late final StreamSubscription subscription;
 
-    subscription = channel.stream.listen(
-      (message) {
-        print("USER: request received ");
-        try {
-          final data = jsonDecode(message);
-
-          if (data['type'] == 'check_user_existence_data') {
-            final userExist = data['userExist'];
-            print("USER: does user exist ${userExist} ");
-
-            completer.complete(userExist);
-
-            subscription.cancel();
-          } else {
-            print("USER: other type");
-          }
-        } catch (e) {
-          if (!completer.isCompleted) {
-            print("USER: ${e.toString()}");
-            completer.completeError("Error decoding server response: $e");
-          }
-          subscription.cancel();
-        }
-      },
-      onError: (error) {
-        if (!completer.isCompleted) {
-          print("USER: completer error $error");
-          completer.completeError("WebSocket error: $error");
-        }
+    subscription = _webSocket.stream.listen((data) {
+      if (data['type'] == 'check_user_existence_data') {
+        final exists = data['userExist'] == true;
+        completer.complete(exists);
         subscription.cancel();
-      },
-      onDone: () {
-        if (!completer.isCompleted) {
-          completer.complete(false);
-        }
-      },
-      cancelOnError: true,
-    );
+      }
+    });
 
-    try {
-      final userData = newUser.toJson();
-      final data = jsonEncode({
-        'type': 'check_user_existence',
-        'user': userData,
-      });
-      channel.sink.add(data);
-    } catch (e) {
-      throw ServerException(message: e.toString());
-    }
+    _webSocket.send({'type': 'check_user_existence', 'user': newUser.toJson()});
 
-    final completerVal = completer.future.timeout(
+    return completer.future.timeout(
       const Duration(seconds: 5),
       onTimeout: () {
         subscription.cancel();
-        print("USER: Timeout waiting for server response");
         return false;
       },
     );
-    print("USER: completerVal = $completerVal");
-    return completerVal;
   }
 
   @override
   Future<WalletModel> createUserWallet({required String userId}) async {
-    final userWallet = WalletModel(
-      walletId: Uuid().v4(),
+    final wallet = WalletModel(
+      walletId: const Uuid().v4(),
       userId: userId,
       balance: 0.0,
     );
 
-    final data = userWallet.toJson();
-
     try {
-      final jsonData = jsonEncode({'type': 'user_wallet', 'user_wallet': data});
-      channel.sink.add(jsonData);
-      return userWallet;
+      _webSocket.send({'type': 'user_wallet', 'user_wallet': wallet.toJson()});
+      return wallet;
     } catch (e) {
       throw ServerException(message: e.toString());
     }

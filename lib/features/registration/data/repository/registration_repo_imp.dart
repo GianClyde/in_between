@@ -42,6 +42,8 @@ class RegistrationRepoImp implements IRegistrationRepo {
         newUser: newUser,
       );
 
+      print("USER EXIT: $doesUserExist");
+
       if (doesUserExist) {
         return left(Failure(message: "User already exists"));
       }

@@ -19,10 +19,10 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
       emit(RegistrationLoading());
       final response = await addNewUserUseCase.execute(event.user.toEntity());
 
-      response.fold(
-        (l) => emit(RegistrationFailed(message: l.message)),
-        (r) => emit(RegistrationSuccess()),
-      );
+      response.fold((l) {
+        print("USER: ERROR ${l.message}");
+        emit(RegistrationFailed(message: l.message));
+      }, (r) => emit(RegistrationSuccess()));
       //TODO login user after registration
     });
 

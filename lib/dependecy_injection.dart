@@ -2,6 +2,7 @@ import 'package:get_it/get_it.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:in_between/core/cubit/user_cubit.dart';
 import 'package:in_between/core/model/user_model.dart';
+import 'package:in_between/core/web_socket/web_socket.dart';
 import 'package:in_between/features/authentication/data/data_source/auth_local_datasource.dart';
 import 'package:in_between/features/authentication/data/data_source/auth_remote_datasource.dart';
 import 'package:in_between/features/authentication/data/repository/auth_repo_imp.dart';
@@ -36,47 +37,44 @@ Future<void> setUpDependencies() async {
   if (!Hive.isBoxOpen('userBox')) {
     await Hive.openBox<UserModel>('userBox');
   }
-  // final userBox = await Hive.openBox<UserModel>('userBox')
 
   sl.registerLazySingleton<Box<UserModel>>(
     () => Hive.box<UserModel>('userBox'),
   );
 
-  //data source
+  // ✅ Register WebSocketChannel first
+  sl.registerLazySingleton<WebSocketChannel>(() {
+    final channel = WebSocketChannel.connect(
+      Uri.parse('ws://192.168.1.3:8080'),
+    );
+    return channel;
+  }, dispose: (channel) => channel.sink.close());
+
+  // ✅ Now WebSocketService can be safely registered
+  sl.registerSingleton(WebSocketService(sl()));
+
+  // ✅ Now register remote data sources that depend on WebSocketService
+  sl.registerFactory<RegisterRemoteDataSource>(
+    () => RegistrationRemoteDatasourceImpl(sl()),
+  );
+
+  sl.registerFactory<AuthRemoteDatasource>(
+    () => AuthRemoteDataSourceImpl(sl()),
+  );
+
+  // Local data sources
   sl.registerLazySingleton(() => RegistrationLocalDatasource());
   sl.registerLazySingleton(() => AuthenticationLocalDatasource());
   sl.registerLazySingleton(() => WalletLocalDatasource());
 
-  //remote data source
-  sl.registerFactory<RegisterRemoteDataSource>(
-    () => RegistrationRemoteDatasourceImpl(channel: sl()),
-  );
-
-  sl.registerFactory<AuthRemoteDatasource>(
-    () => AuthRemoteDataSourceImpl(channel: sl()),
-  );
-
-  //channel
-  sl.registerLazySingleton<WebSocketChannel>(() {
-    // final channel = IOWebSocketChannel.connect('ws://192.168.1.3:8080');
-    final channel = IOWebSocketChannel.connect('ws://172.20.10.2:8080');
-    return channel;
-  }, dispose: (channel) => channel.sink.close());
-
-  //repository
-  sl.registerLazySingleton<RegistrationRepoImp>(
-    () => RegistrationRepoImp(
-      localDatasource: sl(),
-      registerRemoteDataSource: sl(),
-    ),
-  );
-
+  // Repositories
   sl.registerLazySingleton<IRegistrationRepo>(
     () => RegistrationRepoImp(
       localDatasource: sl(),
       registerRemoteDataSource: sl(),
     ),
   );
+
   sl.registerLazySingleton<IAuthenticationRepo>(
     () => AuthenticationRepoImplementation(
       localDatasource: sl(),
@@ -87,13 +85,13 @@ Future<void> setUpDependencies() async {
   sl.registerLazySingleton<UserProfileRepo>(() => UserProfileRepo());
   sl.registerLazySingleton<IWalletRepo>(() => WalletImpRepo(sl()));
 
-  //usecases
+  // Usecases
   sl.registerLazySingleton<AddNewUserUseCase>(() => AddNewUserUseCase(sl()));
   sl.registerLazySingleton<CheckUserUseCase>(() => CheckUserUseCase(sl()));
   sl.registerLazySingleton(() => GetUserUsecase(sl()));
   sl.registerLazySingleton(() => UpdateCreditUsecase(sl()));
 
-  //register bloc
+  // BLoCs & Cubits
   sl.registerFactory<RegistrationBloc>(() => RegistrationBloc(sl(), sl()));
   sl.registerFactory<AuthBloc>(() => AuthBloc(getUserUsecase: sl()));
   sl.registerFactory<UserProfileBloc>(() => UserProfileBloc(sl()));
