@@ -37,9 +37,9 @@ class RegistrationRepoImp implements IRegistrationRepo {
     );
 
     try {
-      // final bool doesUserExist = await registerRemoteDataSource
-      //     .checkUserExistence(newUser: newUser);
-      final bool doesUserExist = false;
+      final bool doesUserExist = await registerRemoteDataSource
+          .checkUserExistence(newUser: newUser);
+      // final bool doesUserExist = false;
       final UserModel? user = await registerRemoteDataSource.addNewUser(
         newUser: newUser,
       );

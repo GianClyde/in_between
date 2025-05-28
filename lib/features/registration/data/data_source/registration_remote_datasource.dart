@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:in_between/core/error/server_exception.dart';
+import 'package:in_between/features/registration/data/model/wallet_model.dart';
+import 'package:uuid/uuid.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 import 'package:in_between/features/registration/data/model/user_model.dart';
@@ -9,6 +11,7 @@ import 'package:in_between/features/registration/data/model/user_model.dart';
 abstract interface class RegisterRemoteDataSource {
   Future<UserModel?> addNewUser({required UserModel newUser});
   Future<bool> checkUserExistence({required UserModel newUser});
+  void createUserWallet({required String userId});
 }
 
 class RegistrationRemoteDatasourceImpl implements RegisterRemoteDataSource {
@@ -21,6 +24,8 @@ class RegistrationRemoteDatasourceImpl implements RegisterRemoteDataSource {
 
     try {
       channel.sink.add(data);
+
+      createUserWallet(userId: newUser.userId);
       return newUser;
     } catch (e) {
       print("ERROR: ${e.toString()}");
@@ -74,7 +79,10 @@ class RegistrationRemoteDatasourceImpl implements RegisterRemoteDataSource {
 
     try {
       final userData = newUser.toJson();
-      final data = {'type': 'check_user_existence', 'user': userData};
+      final data = jsonEncode({
+        'type': 'check_user_existence',
+        'user': userData,
+      });
       channel.sink.add(data);
     } catch (e) {
       throw ServerException(message: e.toString());
@@ -90,5 +98,24 @@ class RegistrationRemoteDatasourceImpl implements RegisterRemoteDataSource {
     );
     print("USER: completerVal = $completerVal");
     return completerVal;
+  }
+
+  @override
+  void createUserWallet({required String userId}) {
+    final userWallet = WalletModel(
+      walletId: Uuid().v4(),
+      userId: userId,
+      balance: 0.0,
+    );
+
+    final data = userWallet.toJson();
+
+    try {
+      final jsonData = jsonEncode({'type': 'user_wallet', 'user_wallet': data});
+      channel.sink.add(jsonData);
+      print("USER: wallet created");
+    } catch (e) {
+      throw ServerException(message: e.toString());
+    }
   }
 }

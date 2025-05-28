@@ -6,4 +6,6 @@ class UserCubit extends Cubit<UserEntity?> {
   void setUser(UserEntity user) => emit(user);
 
   void clearUser() => emit(null);
+
+  UserEntity? get user => state;
 }

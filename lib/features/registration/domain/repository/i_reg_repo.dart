@@ -6,6 +6,7 @@ import 'package:in_between/features/registration/data/model/user_model.dart';
 abstract class IRegistrationRepo {
   Future<Either<Failure, UserModel?>> addUser(UserEntity user);
   Future<bool> userExists(String username);
+
   // Future<UserEntity?> getUser(String username);
 
   //update parang dito din

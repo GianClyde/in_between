@@ -16,22 +16,14 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
   RegistrationBloc(this.addNewUserUseCase, this.checkUserUseCase)
     : super(RegistrationInitial()) {
     on<AddUser>((event, emit) async {
-      final user = event.user;
-
-      final existingUser = await checkUserUseCase.execute(user.username);
-      if (existingUser) {
-        emit(RegistrationFail());
-        return;
-      }
-
+      emit(RegistrationLoading());
       final response = await addNewUserUseCase.execute(event.user.toEntity());
 
       response.fold(
-        (l) => emit(RegistrationFail()),
+        (l) => emit(RegistrationFailed(message: l.message)),
         (r) => emit(RegistrationSuccess()),
       );
       //TODO login user after registration
-      emit(RegistrationSuccess());
     });
 
     on<IncompleteField>((event, emit) {
