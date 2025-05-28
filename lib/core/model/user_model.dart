@@ -51,6 +51,7 @@ class UserModel extends HiveObject {
       mobile: mobile,
       bdate: bdate,
       credits: credits,
+      userId: '',
     );
   }
 }

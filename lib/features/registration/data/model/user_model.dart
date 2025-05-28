@@ -3,9 +3,8 @@ import 'dart:convert';
 import 'package:in_between/core/domain/user_entity.dart';
 
 class UserModel extends UserEntity {
-  final String userId;
   UserModel({
-    required this.userId,
+    required super.userId,
     required super.username,
     required super.password,
     required super.name,
@@ -13,6 +12,18 @@ class UserModel extends UserEntity {
     required super.bdate,
     required super.credits,
   });
+
+  UserEntity toEntity() {
+    return UserEntity(
+      userId: userId,
+      username: username,
+      password: password,
+      name: name,
+      mobile: mobile,
+      bdate: bdate,
+      credits: credits,
+    );
+  }
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{

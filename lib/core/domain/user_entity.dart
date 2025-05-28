@@ -1,4 +1,5 @@
 class UserEntity {
+  final String userId;
   final String username;
   final String password;
   final String name;
@@ -7,6 +8,7 @@ class UserEntity {
   final double credits;
 
   UserEntity({
+    required this.userId,
     required this.username,
     required this.password,
     required this.name,
@@ -24,6 +26,7 @@ class UserEntity {
     double? credits,
   }) {
     return UserEntity(
+      userId: userId,
       username: username ?? this.username,
       password: password ?? this.password,
       name: name ?? this.name,

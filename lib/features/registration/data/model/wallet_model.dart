@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:in_between/features/registration/domain/entity/wallet_entity.dart';
 
 class WalletModel extends Wallet {
@@ -10,11 +9,7 @@ class WalletModel extends Wallet {
   });
 
   Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'walletId': walletId,
-      'userId': userId,
-      'balance': balance,
-    };
+    return {'walletId': walletId, 'userId': userId, 'balance': balance};
   }
 
   factory WalletModel.fromMap(Map<String, dynamic> map) {
@@ -28,5 +23,9 @@ class WalletModel extends Wallet {
   String toJson() => json.encode(toMap());
 
   factory WalletModel.fromJson(String source) =>
-      WalletModel.fromMap(json.decode(source) as Map<String, dynamic>);
+      WalletModel.fromMap(json.decode(source));
+
+  Wallet toEntity() {
+    return Wallet(walletId: walletId, userId: userId, balance: balance);
+  }
 }

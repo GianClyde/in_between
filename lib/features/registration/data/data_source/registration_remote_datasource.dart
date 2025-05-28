@@ -11,7 +11,7 @@ import 'package:in_between/features/registration/data/model/user_model.dart';
 abstract interface class RegisterRemoteDataSource {
   Future<UserModel?> addNewUser({required UserModel newUser});
   Future<bool> checkUserExistence({required UserModel newUser});
-  void createUserWallet({required String userId});
+  Future<WalletModel> createUserWallet({required String userId});
 }
 
 class RegistrationRemoteDatasourceImpl implements RegisterRemoteDataSource {
@@ -25,7 +25,6 @@ class RegistrationRemoteDatasourceImpl implements RegisterRemoteDataSource {
     try {
       channel.sink.add(data);
 
-      createUserWallet(userId: newUser.userId);
       return newUser;
     } catch (e) {
       print("ERROR: ${e.toString()}");
@@ -101,7 +100,7 @@ class RegistrationRemoteDatasourceImpl implements RegisterRemoteDataSource {
   }
 
   @override
-  void createUserWallet({required String userId}) {
+  Future<WalletModel> createUserWallet({required String userId}) async {
     final userWallet = WalletModel(
       walletId: Uuid().v4(),
       userId: userId,
@@ -113,7 +112,7 @@ class RegistrationRemoteDatasourceImpl implements RegisterRemoteDataSource {
     try {
       final jsonData = jsonEncode({'type': 'user_wallet', 'user_wallet': data});
       channel.sink.add(jsonData);
-      print("USER: wallet created");
+      return userWallet;
     } catch (e) {
       throw ServerException(message: e.toString());
     }
