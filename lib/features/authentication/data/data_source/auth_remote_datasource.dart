@@ -53,38 +53,6 @@ class AuthRemoteDataSourceImpl extends AuthRemoteDatasource {
                 completer.complete(null);
               }
 
-              //completer.complete(UserModel.fromMap(user));
-
-              // if (user != null &&
-              //     user['username'].toString().trim() == username.trim() &&
-              //     user['password'].toString().trim() == password.trim()) {
-              //   print("USER: user model from map ${UserModel.fromMap(user)}");
-              //   print("✅ USER MATCHED: ${user['username']}");
-              //   final testser = UserModel(
-              //     username: "c",
-              //     password: "c",
-              //     name: "c",
-              //     mobile: "c",
-              //     bdate: "c",
-              //     credits: 0.0,
-              //   );
-
-              //   final userModel = UserModel(
-              //     username: user['username'],
-              //     password: user['password'],
-              //     name: user['name'],
-              //     mobile: user['mobile'],
-              //     bdate: user['bdate'],
-              //     credits: user['credits'] ?? 0.0,
-              //   );
-
-              //   //completer.complete(UserModel.fromMap(user));
-              //   completer.complete(userModel);
-              // } else {
-              //   print("❌ USER: mismatch");
-              //   completer.complete(null);
-              // }
-
               subscription.cancel();
             } else {
               print("USER: other type");

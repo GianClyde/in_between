@@ -1,3 +1,5 @@
+import 'package:fpdart/fpdart.dart';
+import 'package:in_between/core/error/failure.dart';
 import 'package:in_between/features/authentication/data/data_source/auth_local_datasource.dart';
 import 'package:in_between/features/authentication/data/data_source/auth_remote_datasource.dart';
 import 'package:in_between/features/authentication/domain/repository/i_auth_repo.dart';
@@ -12,14 +14,25 @@ class AuthenticationRepoImplementation implements IAuthenticationRepo {
   });
 
   @override
-  Future<UserModel?> getUser(String username, String password) async {
-    final UserModel? user = await authRemoteDatasource.getUser(
-      username: username,
-      password: password,
-    );
+  Future<Either<Failure, UserModel?>> getUser(
+    String username,
+    String password,
+  ) async {
+    try {
+      final UserModel? user = await authRemoteDatasource.getUser(
+        username: username,
+        password: password,
+      );
 
-    print("USER repo impl triggered");
-    return user;
+      if (user != null) {
+        print("USER repo impl triggered");
+        return right(user);
+      } else {
+        return left(Failure(message: "No User Found"));
+      }
+    } catch (e) {
+      return left(Failure(message: e.toString()));
+    }
   }
 }
 

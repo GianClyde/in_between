@@ -1,4 +1,6 @@
+import 'package:fpdart/fpdart.dart';
 import 'package:in_between/core/domain/user_entity.dart';
+import 'package:in_between/core/error/failure.dart';
 import 'package:in_between/features/registration/data/data_source/registration_local_datasource.dart';
 import 'package:in_between/features/registration/data/data_source/registration_remote_datasource.dart';
 import 'package:in_between/features/registration/data/model/user_model.dart';
@@ -20,7 +22,7 @@ class RegistrationRepoImp implements IRegistrationRepo {
   }
 
   @override
-  Future<void> addUser(UserEntity user) async {
+  Future<Either<Failure, UserModel?>> addUser(UserEntity user) async {
     //await localDatasource.addNewUser(user);
     final newUser = UserModel(
       username: user.username,
@@ -30,6 +32,14 @@ class RegistrationRepoImp implements IRegistrationRepo {
       bdate: user.bdate,
       credits: user.credits,
     );
-    await registerRemoteDataSource.addNewUser(newUser: newUser);
+
+    try {
+      final UserModel? user = await registerRemoteDataSource.addNewUser(
+        newUser: newUser,
+      );
+      return right(user);
+    } catch (e) {
+      return left(Failure(message: e.toString()));
+    }
   }
 }

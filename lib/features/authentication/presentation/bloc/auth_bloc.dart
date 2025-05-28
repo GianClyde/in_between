@@ -15,14 +15,22 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       print("USER: bloc truggeds");
       emit(AuthLoading());
 
-      final user = await getUserUsecase.execute(event.username, event.password);
+      final response = await getUserUsecase.execute(
+        event.username,
+        event.password,
+      );
+
+      response.fold(
+        (l) => emit(AuthFailed(error: l.message)),
+        (r) => emit(AuthSuccess(user: r!)),
+      );
       //final user = null;
-      print("USER: bloc user  contains = ${user?.username}");
-      if (user != null) {
-        emit(AuthSuccess(user: user));
-      } else {
-        emit(AuthFailed(error: "UserNot Found"));
-      }
+      // print("USER: bloc user  contains = ${user?.username}");
+      // if (user != null) {
+      //   emit(AuthSuccess(user: user));
+      // } else {
+      //   emit(AuthFailed(error: "UserNot Found"));
+      // }
     });
   }
 }
