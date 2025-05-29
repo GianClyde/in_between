@@ -8,3 +8,10 @@ final class HomeFetchUserWallet extends HomeEvent {
 
   HomeFetchUserWallet({required this.userId});
 }
+
+final class HomeJoinRoom extends HomeEvent {
+  final UserEntity user;
+  final String roomId;
+
+  HomeJoinRoom({required this.user, required this.roomId});
+}

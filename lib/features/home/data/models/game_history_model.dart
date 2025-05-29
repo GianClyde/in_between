@@ -23,9 +23,9 @@ class GameHistoryModel extends GameHistory {
     return GameHistoryModel(
       gameHistoryId: map['gameHistoryId'] as String,
       userId: map['userId'] as String,
-      gameList: List<GameModel>.from(
-        (map['gameList'] as List<int>).map<GameModel>(
-          (x) => GameModel.fromMap(x as Map<String, dynamic>),
+      gameList: List<UserGameModel>.from(
+        (map['gameList'] as List<int>).map<UserGameModel>(
+          (x) => UserGameModel.fromMap(x as Map<String, dynamic>),
         ),
       ),
     );

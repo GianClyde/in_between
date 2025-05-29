@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-import 'package:in_between/features/home/domain/entity/game.dart';
+import 'package:in_between/features/home/domain/entity/user_game.dart';
 
-class GameModel extends Game {
-  GameModel({
+class UserGameModel extends UserGame {
+  UserGameModel({
     required super.gameId,
     required super.userId,
     required super.roomId,
@@ -21,8 +21,8 @@ class GameModel extends Game {
     };
   }
 
-  factory GameModel.fromMap(Map<String, dynamic> map) {
-    return GameModel(
+  factory UserGameModel.fromMap(Map<String, dynamic> map) {
+    return UserGameModel(
       gameId: map['gameId'] as String,
       userId: map['userId'] as String,
       roomId: map['roomId'] as String,
@@ -33,6 +33,6 @@ class GameModel extends Game {
 
   String toJson() => json.encode(toMap());
 
-  factory GameModel.fromJson(String source) =>
-      GameModel.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory UserGameModel.fromJson(String source) =>
+      UserGameModel.fromMap(json.decode(source) as Map<String, dynamic>);
 }

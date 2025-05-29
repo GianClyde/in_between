@@ -1,10 +1,19 @@
 import 'dart:async';
 
+import 'package:fpdart/fpdart.dart';
+import 'package:in_between/core/error/server_exception.dart';
+
 import 'package:in_between/core/web_socket/web_socket.dart';
+import 'package:in_between/features/home/data/models/room_model.dart';
+import 'package:in_between/features/registration/data/model/user_model.dart';
 import 'package:in_between/features/registration/data/model/wallet_model.dart';
 
 abstract interface class HomeRemoteDatasource {
   Future<WalletModel?> getUserWallet({required String userId});
+  Future<String?> insertPlayerToRoom({
+    required UserModel user,
+    required String roomId,
+  });
 }
 
 class HomeRemoteDatasourceImpl extends HomeRemoteDatasource {
@@ -60,5 +69,23 @@ class HomeRemoteDatasourceImpl extends HomeRemoteDatasource {
         return null;
       },
     );
+  }
+
+  @override
+  Future<String?> insertPlayerToRoom({
+    required UserModel user,
+    required String roomId,
+  }) async {
+    try {
+      _webSocket.send({
+        'type': 'insert_player_to_room',
+        'roomId': roomId,
+        'user': user.toJson(),
+      });
+
+      return roomId;
+    } catch (e) {
+      throw ServerException(message: e.toString());
+    }
   }
 }

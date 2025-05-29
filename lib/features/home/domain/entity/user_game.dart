@@ -1,14 +1,14 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
-class Game {
+class UserGame {
   final String gameId;
   final String userId;
   final String roomId;
   final String earning;
   final String dateTime;
 
-  Game({
+  UserGame({
     required this.gameId,
     required this.userId,
     required this.roomId,
@@ -26,8 +26,8 @@ class Game {
     };
   }
 
-  factory Game.fromMap(Map<String, dynamic> map) {
-    return Game(
+  factory UserGame.fromMap(Map<String, dynamic> map) {
+    return UserGame(
       gameId: map['gameId'] as String,
       userId: map['userId'] as String,
       roomId: map['roomId'] as String,
@@ -38,6 +38,6 @@ class Game {
 
   String toJson() => json.encode(toMap());
 
-  factory Game.fromJson(String source) =>
-      Game.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory UserGame.fromJson(String source) =>
+      UserGame.fromMap(json.decode(source) as Map<String, dynamic>);
 }

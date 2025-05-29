@@ -6,7 +6,7 @@ import 'package:in_between/core/domain/user_entity.dart';
 import 'package:in_between/core/routes/app_router.dart';
 import 'package:in_between/core/widgets/history_tile.dart';
 import 'package:in_between/core/widgets/images.dart';
-import 'package:in_between/features/home/presentation/bloc/bloc/home_bloc.dart';
+import 'package:in_between/features/home/presentation/bloc/home_bloc.dart';
 
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:transformer_page_view_tv/transformer_page_view.dart';
@@ -37,7 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    List<String> rooms = ['Room 1', 'Room 2', 'Room 3', 'Room 4'];
+    List<String> rooms = ['room1', 'room2', 'room3', 'room4'];
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
@@ -98,6 +98,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: SliderBg(
                   index: rooms[index].toString(),
                   onPressed: () {
+                    context.read<HomeBloc>().add(
+                      HomeJoinRoom(
+                        user: user!,
+                        roomId: rooms[index].toString(),
+                      ),
+                    );
                     context.go(Routes.gameZoneScreen);
                   },
                 ),

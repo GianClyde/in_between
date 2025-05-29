@@ -10,10 +10,13 @@ import 'package:in_between/features/authentication/domain/repository/i_auth_repo
 import 'package:in_between/features/authentication/domain/usecase/get_user_usecase.dart';
 import 'package:in_between/features/authentication/presentation/bloc/auth_bloc.dart';
 import 'package:in_between/features/home/data/datasource/home_remote_datasource.dart';
+import 'package:in_between/features/home/data/repository/player_repository.dart';
 import 'package:in_between/features/home/data/repository/user_wallet_repository_imp.dart';
+import 'package:in_between/features/home/domain/repository/player_repository.dart';
 import 'package:in_between/features/home/domain/repository/user_wallet_repository.dart';
 import 'package:in_between/features/home/domain/usecase/get_user_wallet_usecase.dart';
-import 'package:in_between/features/home/presentation/bloc/bloc/home_bloc.dart';
+import 'package:in_between/features/home/domain/usecase/insert_player_to_room_usecase.dart';
+import 'package:in_between/features/home/presentation/bloc/home_bloc.dart';
 import 'package:in_between/features/profile/domain/user_profile_repo.dart';
 import 'package:in_between/features/profile/presentation/bloc/user_profile_bloc.dart';
 import 'package:in_between/features/registration/data/data_source/registration_local_datasource.dart';
@@ -28,7 +31,7 @@ import 'package:in_between/features/wallet/data/repository/wallet_imp_repo.dart'
 import 'package:in_between/features/wallet/domain/repository/i_wallet_repo.dart';
 import 'package:in_between/features/wallet/domain/usecase/update_credit_usecase.dart';
 import 'package:in_between/features/wallet/presentation/bloc/wallet_bloc.dart';
-import 'package:web_socket_channel/io.dart';
+
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 final sl = GetIt.instance;
@@ -96,6 +99,10 @@ Future<void> setUpDependencies() async {
     () => UserWalletRepositoryImp(homeRemoteDatasource: sl()),
   );
 
+  sl.registerLazySingleton<PlayerRepository>(
+    () => PlayerRepositoryImpl(homeRemoteDatasource: sl()),
+  );
+
   sl.registerLazySingleton<UserProfileRepo>(() => UserProfileRepo());
   sl.registerLazySingleton<IWalletRepo>(() => WalletImpRepo(sl()));
 
@@ -107,6 +114,9 @@ Future<void> setUpDependencies() async {
   sl.registerLazySingleton(
     () => GetUserWalletUsecase(userWalletRepository: sl()),
   );
+  sl.registerLazySingleton(
+    () => InsertPlayerToRoomUsecase(playerRepository: sl()),
+  );
 
   // BLoCs & Cubits
   sl.registerFactory<RegistrationBloc>(() => RegistrationBloc(sl(), sl()));
@@ -114,5 +124,7 @@ Future<void> setUpDependencies() async {
   sl.registerFactory<UserProfileBloc>(() => UserProfileBloc(sl()));
   sl.registerFactory<UserCubit>(() => UserCubit());
   sl.registerFactory<WalletBloc>(() => WalletBloc(sl()));
-  sl.registerFactory<HomeBloc>(() => HomeBloc(getUserWalletUsecase: sl()));
+  sl.registerFactory<HomeBloc>(
+    () => HomeBloc(getUserWalletUsecase: sl(), insertPlayerToRoomUsecase: sl()),
+  );
 }

@@ -1,12 +1,11 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
-import 'package:in_between/features/home/domain/entity/game.dart';
+import 'package:in_between/features/home/domain/entity/user_game.dart';
 
 class GameHistory {
   final String gameHistoryId;
   final String userId;
-  final List<Game> gameList;
+  final List<UserGame> gameList;
 
   GameHistory({
     required this.gameHistoryId,
@@ -26,9 +25,9 @@ class GameHistory {
     return GameHistory(
       gameHistoryId: map['gameHistoryId'] as String,
       userId: map['userId'] as String,
-      gameList: List<Game>.from(
-        (map['gameList'] as List<int>).map<Game>(
-          (x) => Game.fromMap(x as Map<String, dynamic>),
+      gameList: List<UserGame>.from(
+        (map['gameList'] as List<int>).map<UserGame>(
+          (x) => UserGame.fromMap(x as Map<String, dynamic>),
         ),
       ),
     );

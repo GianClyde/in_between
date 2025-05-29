@@ -2,6 +2,7 @@ import 'package:fpdart/fpdart.dart';
 import 'package:in_between/core/error/failure.dart';
 import 'package:in_between/features/home/data/datasource/home_remote_datasource.dart';
 import 'package:in_between/features/home/domain/repository/user_wallet_repository.dart';
+import 'package:in_between/features/registration/data/model/user_model.dart';
 import 'package:in_between/features/registration/domain/entity/wallet_entity.dart';
 
 class UserWalletRepositoryImp implements UserWalletRepository {

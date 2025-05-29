@@ -1,3 +1,5 @@
+import 'package:in_between/features/registration/data/model/user_model.dart';
+
 class UserEntity {
   final String userId;
   final String username;
@@ -16,6 +18,17 @@ class UserEntity {
     required this.bdate,
     required this.credits,
   });
+  UserModel toModel() {
+    return UserModel(
+      userId: userId,
+      username: username,
+      password: password,
+      name: name,
+      mobile: mobile,
+      bdate: bdate,
+      credits: credits,
+    );
+  }
 
   UserEntity copyWith({
     String? username,
