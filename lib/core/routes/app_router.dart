@@ -140,8 +140,11 @@ final GoRouter router = GoRouter(
           builder: (context, state) => ProfileScreen(),
         ),
         GoRoute(
-          path: Routes.gameZoneScreen,
-          builder: (context, state) => GameZone(),
+          path: "/${Routes.gameZoneScreen}/:roomId",
+          builder: (context, state) {
+            final roomId = state.pathParameters['roomId'] as String;
+            return GameZone(roomId: roomId);
+          },
         ),
       ],
     ),

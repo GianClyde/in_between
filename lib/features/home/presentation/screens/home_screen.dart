@@ -104,7 +104,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         roomId: rooms[index].toString(),
                       ),
                     );
-                    context.go(Routes.gameZoneScreen);
+                    context.go('${Routes.gameZoneScreen}/${rooms[index]}');
                   },
                 ),
               );

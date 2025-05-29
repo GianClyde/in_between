@@ -15,3 +15,10 @@ final class HomeJoinRoom extends HomeEvent {
 
   HomeJoinRoom({required this.user, required this.roomId});
 }
+
+final class HomeLeaveRoom extends HomeEvent {
+  final UserEntity user;
+  final String roomId;
+
+  HomeLeaveRoom({required this.user, required this.roomId});
+}

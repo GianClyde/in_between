@@ -31,5 +31,18 @@ final class HomeJoinRoomFailed extends HomeState {
   HomeJoinRoomFailed({required this.message});
 }
 
+//for leaving room
+final class HomeLeaveRoomSuccess extends HomeState {
+  final String message;
+
+  HomeLeaveRoomSuccess({required this.message});
+}
+
+final class HomeLeaveRoomFailed extends HomeState {
+  final String message;
+
+  HomeLeaveRoomFailed({required this.message});
+}
+
 //shared
 final class HomeLoading extends HomeState {}

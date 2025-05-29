@@ -16,6 +16,7 @@ import 'package:in_between/features/home/domain/repository/player_repository.dar
 import 'package:in_between/features/home/domain/repository/user_wallet_repository.dart';
 import 'package:in_between/features/home/domain/usecase/get_user_wallet_usecase.dart';
 import 'package:in_between/features/home/domain/usecase/insert_player_to_room_usecase.dart';
+import 'package:in_between/features/home/domain/usecase/remove_player_from_room_usecase.dart';
 import 'package:in_between/features/home/presentation/bloc/home_bloc.dart';
 import 'package:in_between/features/profile/domain/user_profile_repo.dart';
 import 'package:in_between/features/profile/presentation/bloc/user_profile_bloc.dart';
@@ -117,6 +118,9 @@ Future<void> setUpDependencies() async {
   sl.registerLazySingleton(
     () => InsertPlayerToRoomUsecase(playerRepository: sl()),
   );
+  sl.registerLazySingleton(
+    () => RemovePlayerFromRoomUsecase(playerRepository: sl()),
+  );
 
   // BLoCs & Cubits
   sl.registerFactory<RegistrationBloc>(() => RegistrationBloc(sl(), sl()));
@@ -125,6 +129,10 @@ Future<void> setUpDependencies() async {
   sl.registerFactory<UserCubit>(() => UserCubit());
   sl.registerFactory<WalletBloc>(() => WalletBloc(sl()));
   sl.registerFactory<HomeBloc>(
-    () => HomeBloc(getUserWalletUsecase: sl(), insertPlayerToRoomUsecase: sl()),
+    () => HomeBloc(
+      getUserWalletUsecase: sl(),
+      insertPlayerToRoomUsecase: sl(),
+      removePlayerFromRoomUsecase: sl(),
+    ),
   );
 }
