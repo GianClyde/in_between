@@ -16,3 +16,20 @@ final class CashOutSuccess extends WalletState {}
 
 final class CashOutFail extends WalletState {}
 //di na-add tas successcashout
+
+// new
+final class WalletDepositSuccess extends WalletState {
+  final double newBalance;
+
+  WalletDepositSuccess({required this.newBalance});
+}
+
+final class WalletDepositFailed extends WalletState {
+  final String message;
+
+  WalletDepositFailed({required this.message});
+}
+
+//shared
+
+final class WalletLoading extends WalletState {}

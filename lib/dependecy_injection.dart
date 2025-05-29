@@ -28,8 +28,10 @@ import 'package:in_between/features/registration/domain/usecase/add_new_user_use
 import 'package:in_between/features/registration/domain/usecase/check_user_use_case.dart';
 import 'package:in_between/features/registration/presentation/bloc/registration_bloc.dart';
 import 'package:in_between/features/wallet/data/datasource/wallet_local_datasource.dart';
+import 'package:in_between/features/wallet/data/datasource/wallet_remote_datasource.dart';
 import 'package:in_between/features/wallet/data/repository/wallet_imp_repo.dart';
 import 'package:in_between/features/wallet/domain/repository/i_wallet_repo.dart';
+import 'package:in_between/features/wallet/domain/usecase/deposit_wallet_usecase.dart';
 import 'package:in_between/features/wallet/domain/usecase/update_credit_usecase.dart';
 import 'package:in_between/features/wallet/presentation/bloc/wallet_bloc.dart';
 
@@ -75,6 +77,10 @@ Future<void> setUpDependencies() async {
     () => HomeRemoteDatasourceImpl(webSocket: sl()),
   );
 
+  sl.registerFactory<WalletRemoteDatasource>(
+    () => WalletLocalDatasourceImpl(webSocketService: sl()),
+  );
+
   // Local data sources
   sl.registerLazySingleton(() => RegistrationLocalDatasource());
   sl.registerLazySingleton(() => AuthenticationLocalDatasource());
@@ -105,7 +111,12 @@ Future<void> setUpDependencies() async {
   );
 
   sl.registerLazySingleton<UserProfileRepo>(() => UserProfileRepo());
-  sl.registerLazySingleton<IWalletRepo>(() => WalletImpRepo(sl()));
+  sl.registerLazySingleton<IWalletRepo>(
+    () => WalletImpRepo(
+      walletLocalDataSource: sl(),
+      walletRemoteDatasource: sl(),
+    ),
+  );
 
   // Usecases
   sl.registerLazySingleton<AddNewUserUseCase>(() => AddNewUserUseCase(sl()));
@@ -121,13 +132,16 @@ Future<void> setUpDependencies() async {
   sl.registerLazySingleton(
     () => RemovePlayerFromRoomUsecase(playerRepository: sl()),
   );
+  sl.registerLazySingleton(() => DepositWalletUsecase(iWalletRepo: sl()));
 
   // BLoCs & Cubits
   sl.registerFactory<RegistrationBloc>(() => RegistrationBloc(sl(), sl()));
   sl.registerFactory<AuthBloc>(() => AuthBloc(getUserUsecase: sl()));
   sl.registerFactory<UserProfileBloc>(() => UserProfileBloc(sl()));
   sl.registerFactory<UserCubit>(() => UserCubit());
-  sl.registerFactory<WalletBloc>(() => WalletBloc(sl()));
+  sl.registerFactory<WalletBloc>(
+    () => WalletBloc(updateCreditUsecase: sl(), depositWalletUsecase: sl()),
+  );
   sl.registerFactory<HomeBloc>(
     () => HomeBloc(
       getUserWalletUsecase: sl(),

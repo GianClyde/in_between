@@ -19,3 +19,10 @@ class CashOut extends WalletEvent {
 }
 
 class IncompleteField extends WalletEvent {}
+
+final class DepositWallet extends WalletEvent {
+  final String userWalletId;
+  final double depositAmount;
+
+  DepositWallet({required this.userWalletId, required this.depositAmount});
+}
