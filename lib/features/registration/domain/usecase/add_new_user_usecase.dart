@@ -17,14 +17,22 @@ class AddNewUserUseCase {
         return left(Failure(message: 'User creation failed'));
       }
 
+      // Create wallet
       final walletResult = await iRegistrationRepo.createUserWallet(
         userId: newUser.userId,
       );
 
-      return walletResult.fold(
-        (failure) => left(failure),
-        (_) => right(newUser),
-      );
+      return await walletResult.fold((failure) => left(failure), (_) async {
+        //Create game history
+        final gameHistoryResult = await iRegistrationRepo.createGameHistory(
+          userId: newUser.userId,
+        );
+
+        return gameHistoryResult.fold(
+          (failure) => left(failure),
+          (_) => right(newUser), // Return new user if all succeeded
+        );
+      });
     });
   }
 }

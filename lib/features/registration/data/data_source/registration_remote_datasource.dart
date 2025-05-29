@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:in_between/core/web_socket/web_socket.dart';
+import 'package:in_between/features/home/data/models/game_history_model.dart';
 import 'package:uuid/uuid.dart';
 import 'package:in_between/core/error/server_exception.dart';
 import 'package:in_between/features/registration/data/model/user_model.dart';
@@ -10,6 +11,7 @@ abstract interface class RegisterRemoteDataSource {
   Future<UserModel?> addNewUser({required UserModel newUser});
   Future<bool> checkUserExistence({required UserModel newUser});
   Future<WalletModel> createUserWallet({required String userId});
+  Future<GameHistoryModel> createGameHistory({required String userId});
 }
 
 class RegistrationRemoteDatasourceImpl implements RegisterRemoteDataSource {
@@ -64,6 +66,26 @@ class RegistrationRemoteDatasourceImpl implements RegisterRemoteDataSource {
       _webSocket.send({'type': 'user_wallet', 'user_wallet': wallet.toJson()});
       return wallet;
     } catch (e) {
+      throw ServerException(message: e.toString());
+    }
+  }
+
+  @override
+  Future<GameHistoryModel> createGameHistory({required String userId}) async {
+    final gameHistory = GameHistoryModel(
+      gameHistoryId: Uuid().v4(),
+      userId: userId,
+      gameList: [],
+    );
+
+    try {
+      _webSocket.send({
+        'type': 'user_game_history',
+        'game_history': gameHistory.toJson(),
+      });
+      return gameHistory;
+    } catch (e) {
+      print(("SERVER: ${e.toString()}"));
       throw ServerException(message: e.toString());
     }
   }

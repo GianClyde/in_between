@@ -2,6 +2,7 @@ import 'package:fpdart/fpdart.dart';
 import 'package:in_between/core/domain/user_entity.dart';
 import 'package:in_between/core/error/failure.dart';
 import 'package:in_between/core/error/server_exception.dart';
+import 'package:in_between/features/home/domain/entity/game_history.dart';
 import 'package:in_between/features/registration/data/data_source/registration_local_datasource.dart';
 import 'package:in_between/features/registration/data/data_source/registration_remote_datasource.dart';
 import 'package:in_between/features/registration/data/model/user_model.dart';
@@ -72,7 +73,21 @@ class RegistrationRepoImp implements IRegistrationRepo {
       final userWallet = await registerRemoteDataSource.createUserWallet(
         userId: userId,
       );
-      return right(userWallet.toEntity());
+      return right(userWallet);
+    } catch (e) {
+      return left(Failure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, GameHistory?>> createGameHistory({
+    required String userId,
+  }) async {
+    try {
+      final gameHistory = await registerRemoteDataSource.createGameHistory(
+        userId: userId,
+      );
+      return right(gameHistory);
     } catch (e) {
       return left(Failure(message: e.toString()));
     }
