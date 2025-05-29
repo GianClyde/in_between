@@ -6,108 +6,133 @@ import 'package:in_between/core/domain/user_entity.dart';
 import 'package:in_between/core/routes/app_router.dart';
 import 'package:in_between/core/widgets/history_tile.dart';
 import 'package:in_between/core/widgets/images.dart';
+import 'package:in_between/features/home/presentation/bloc/bloc/home_bloc.dart';
 
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:transformer_page_view_tv/transformer_page_view.dart';
 // import 'package:vector_math/vector_math_64.dart' hide Colors;
 
-class HomeScreen extends StatelessWidget {
-  HomeScreen({super.key});
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  late UserEntity? user;
   final TransformerPageController controller = TransformerPageController(
     itemCount: 4,
   );
 
   @override
+  void initState() {
+    super.initState();
+    user = context.read<UserCubit>().state;
+    if (user != null) {
+      context.read<HomeBloc>().add(HomeFetchUserWallet(userId: user!.userId));
+    }
+    //todo if null clear the user in cubit and redirect to login
+  }
+
+  @override
   Widget build(BuildContext context) {
     List<String> rooms = ['Room 1', 'Room 2', 'Room 3', 'Room 4'];
-    return BlocBuilder<UserCubit, UserEntity?>(
-      builder: (context, user) {
-        return Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Text("Welcome ${user!.username}", style: TextStyle(fontSize: 28)),
-            SizedBox(
-              height: 200,
-              child: TransformerPageView(
-                pageSnapping: true,
-                pageController: controller,
-                itemCount: rooms.length,
-                transformer: PageTransformerBuilder(
-                  builder: (Widget child, TransformInfo info) {
-                    double scale =
-                        1 - (0.15 * info.position!.abs()); // Shrink side cards
-                    double depth =
-                        info.position! * -30; // Push side cards backward
-                    double angle =
-                        info.position! *
-                        0.12; // Slight rotation for perspective
-                    double offsetX = info.position! * -25;
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        BlocBuilder<HomeBloc, HomeState>(
+          builder: (context, state) {
+            String walletText = "Loading wallet...";
+            if (state is HomeUserWalletFetchedSuccess) {
+              walletText = state.userWallet.walletId;
+            } else if (state is HomeUserWalletFetchedFailed) {
+              walletText = "Failed to load wallet";
+            }
+            return Text(
+              "Welcome ${user!.username} || wallet $walletText",
+              style: TextStyle(fontSize: 28),
+            );
+          },
+        ),
+        SizedBox(
+          height: 200,
+          child: TransformerPageView(
+            pageSnapping: true,
+            pageController: controller,
+            itemCount: rooms.length,
+            transformer: PageTransformerBuilder(
+              builder: (Widget child, TransformInfo info) {
+                double scale =
+                    1 - (0.15 * info.position!.abs()); // Shrink side cards
+                double depth = info.position! * -30; // Push side cards backward
+                double angle =
+                    info.position! * 0.12; // Slight rotation for perspective
+                double offsetX = info.position! * -25;
 
-                    return Transform(
-                      alignment: Alignment.center,
-                      transform:
-                          Matrix4.identity()
-                            ..setEntry(3, 2, 0.001) // Perspective effect
-                            ..translate(
-                              offsetX,
-                              // info.position! * -30,
-                              0.2,
-                              depth,
-                            ) // Push cards backward
-                            ..rotateY(angle), // Slight horizontal tilt
-                      child: Opacity(
-                        opacity:
-                            info.position!.abs() > 1
-                                ? 0.5
-                                : 1, // Fade side cards a little
-                        child: Transform.scale(scale: scale, child: child),
-                      ),
-                    );
+                return Transform(
+                  alignment: Alignment.center,
+                  transform:
+                      Matrix4.identity()
+                        ..setEntry(3, 2, 0.001) // Perspective effect
+                        ..translate(
+                          offsetX,
+                          // info.position! * -30,
+                          0.2,
+                          depth,
+                        ) // Push cards backward
+                        ..rotateY(angle), // Slight horizontal tilt
+                  child: Opacity(
+                    opacity:
+                        info.position!.abs() > 1
+                            ? 0.5
+                            : 1, // Fade side cards a little
+                    child: Transform.scale(scale: scale, child: child),
+                  ),
+                );
+              },
+            ),
+            itemBuilder: (context, index) {
+              return Align(
+                alignment: Alignment.center,
+                child: SliderBg(
+                  index: rooms[index].toString(),
+                  onPressed: () {
+                    context.go(Routes.gameZoneScreen);
                   },
                 ),
-                itemBuilder: (context, index) {
-                  return Align(
-                    alignment: Alignment.center,
-                    child: SliderBg(
-                      index: rooms[index].toString(),
-                      onPressed: () {
-                        context.go(Routes.gameZoneScreen);
-                      },
-                    ),
-                  );
-                },
-              ),
+              );
+            },
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.only(top: 3, bottom: 8),
+          child: SmoothPageIndicator(
+            controller: controller,
+            count: rooms.length,
+            effect: SwapEffect(
+              dotColor: Colors.grey,
+              activeDotColor: Color(0xffd5bc79),
+              dotHeight: 8,
+              dotWidth: 8,
             ),
-            Padding(
-              padding: EdgeInsets.only(top: 3, bottom: 8),
-              child: SmoothPageIndicator(
-                controller: controller,
-                count: rooms.length,
-                effect: SwapEffect(
-                  dotColor: Colors.grey,
-                  activeDotColor: Color(0xffd5bc79),
-                  dotHeight: 8,
-                  dotWidth: 8,
+          ),
+        ),
+
+        Text('History', textAlign: TextAlign.start),
+        Expanded(
+          child: CustomScrollView(
+            slivers: [
+              SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) => HistoryTile(index: index),
+                  childCount: 7,
                 ),
               ),
-            ),
-
-            Text('History', textAlign: TextAlign.start),
-            Expanded(
-              child: CustomScrollView(
-                slivers: [
-                  SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                      (context, index) => HistoryTile(index: index),
-                      childCount: 7,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        );
-      },
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

@@ -7,6 +7,7 @@ import 'package:in_between/core/cubit/user_cubit.dart';
 import 'package:in_between/core/routes/app_router.dart';
 import 'package:in_between/dependecy_injection.dart';
 import 'package:in_between/features/authentication/presentation/bloc/auth_bloc.dart';
+import 'package:in_between/features/home/presentation/bloc/bloc/home_bloc.dart';
 import 'package:in_between/features/profile/presentation/bloc/user_profile_bloc.dart';
 import 'package:in_between/features/registration/data/repository/registration_repo_imp.dart';
 import 'package:in_between/features/registration/domain/repository/i_reg_repo.dart';
@@ -44,6 +45,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => sl<UserProfileBloc>()),
         BlocProvider<UserCubit>(create: (context) => sl<UserCubit>()),
         BlocProvider(create: (context) => sl<WalletBloc>()),
+        BlocProvider(create: (context) => sl<HomeBloc>()),
       ],
       child: MaterialApp.router(
         debugShowCheckedModeBanner: false,
