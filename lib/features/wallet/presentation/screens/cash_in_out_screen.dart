@@ -10,7 +10,8 @@ import 'package:in_between/core/widgets/textfield_widget.dart';
 import 'package:in_between/features/wallet/presentation/bloc/wallet_bloc.dart';
 
 class CashInOutScreen extends StatelessWidget {
-  const CashInOutScreen({super.key});
+  final String walletId;
+  const CashInOutScreen({super.key, required this.walletId});
 
   @override
   Widget build(BuildContext context) {
@@ -20,12 +21,12 @@ class CashInOutScreen extends StatelessWidget {
     final user = context.watch<UserCubit>().state;
     return BlocListener<WalletBloc, WalletState>(
       listener: (context, state) {
-        if (state is CashInSuccess) {
-          context.read<UserCubit>().setUser(state.credit);
-        } else if (state is CashInFail) {
+        if (state is WalletDepositSuccess) {
+          context.go(Routes.homeScreen);
+        } else if (state is WalletDepositFailed) {
           ScaffoldMessenger.of(
             context,
-          ).showSnackBar(SnackBar(content: Text('Please fill in all fields!')));
+          ).showSnackBar(SnackBar(content: Text('An error has occured')));
         }
       },
       child: Padding(
@@ -85,18 +86,21 @@ class CashInOutScreen extends StatelessWidget {
               onPressed: () {
                 print('cash in/out clicked');
                 final amount = cashInOutAmount.text.trim();
-                final accountNumber = accNumberController.text.trim();
-                final accountName = accNameController.text.trim();
+                // final accountNumber = accNumberController.text.trim();
+                // final accountName = accNameController.text.trim();
 
-                if (amount.isEmpty ||
-                    accountName.isEmpty ||
-                    accountNumber.isEmpty) {
+                if (amount.isEmpty) {
                   context.read<WalletBloc>().add(IncompleteField());
                 }
 
                 final inputCredit = double.tryParse(amount);
-                final userData = user;
-                context.read<WalletBloc>().add(CashIn(userData!, inputCredit!));
+                //final userData = user;
+                context.read<WalletBloc>().add(
+                  DepositWallet(
+                    userWalletId: walletId,
+                    depositAmount: inputCredit ?? 0.0,
+                  ),
+                );
               },
             ),
           ],
