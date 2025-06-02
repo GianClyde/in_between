@@ -26,3 +26,10 @@ final class DepositWallet extends WalletEvent {
 
   DepositWallet({required this.userWalletId, required this.depositAmount});
 }
+
+final class WithdrawWallet extends WalletEvent {
+  final String userWalletId;
+  final double withdrawAmount;
+
+  WithdrawWallet({required this.userWalletId, required this.withdrawAmount});
+}

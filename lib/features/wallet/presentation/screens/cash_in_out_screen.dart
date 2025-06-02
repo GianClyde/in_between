@@ -7,6 +7,7 @@ import 'package:in_between/core/widgets/bank_logo_card.dart';
 import 'package:in_between/core/widgets/images.dart';
 import 'package:in_between/core/widgets/outlined_button_widget.dart';
 import 'package:in_between/core/widgets/textfield_widget.dart';
+import 'package:in_between/features/home/presentation/bloc/home_bloc.dart';
 import 'package:in_between/features/wallet/presentation/bloc/wallet_bloc.dart';
 
 class CashInOutScreen extends StatelessWidget {
@@ -22,6 +23,9 @@ class CashInOutScreen extends StatelessWidget {
     return BlocListener<WalletBloc, WalletState>(
       listener: (context, state) {
         if (state is WalletDepositSuccess) {
+          context.read<HomeBloc>().add(
+            HomeFetchUserWallet(userId: user!.userId),
+          );
           context.go(Routes.homeScreen);
         } else if (state is WalletDepositFailed) {
           ScaffoldMessenger.of(

@@ -30,6 +30,18 @@ final class WalletDepositFailed extends WalletState {
   WalletDepositFailed({required this.message});
 }
 
+final class WalletWithdrawSuccess extends WalletState {
+  final double newBalance;
+
+  WalletWithdrawSuccess({required this.newBalance});
+}
+
+final class WalletWithdrawFailed extends WalletState {
+  final String message;
+
+  WalletWithdrawFailed({required this.message});
+}
+
 //shared
 
 final class WalletLoading extends WalletState {}

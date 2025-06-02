@@ -57,4 +57,25 @@ class WalletImpRepo implements IWalletRepo {
       return left(Failure(message: e.toString()));
     }
   }
+
+  @override
+  Future<Either<Failure, double>> withdrawFromWallet({
+    required String userWalletId,
+    required double withdrawAmount,
+  }) async {
+    try {
+      final walletBalance = await walletRemoteDatasource.withdrawFromWallet(
+        userWalletId: userWalletId,
+        withdrawAmount: withdrawAmount,
+      );
+
+      if (walletBalance == null) {
+        return left(Failure(message: "Failed to retrieve balance"));
+      }
+
+      return right(walletBalance);
+    } catch (e) {
+      return left(Failure(message: e.toString()));
+    }
+  }
 }

@@ -12,4 +12,9 @@ abstract class IWalletRepo {
     required String userWalletId,
     required double depositAmount,
   });
+
+  Future<Either<Failure, double>> withdrawFromWallet({
+    required String userWalletId,
+    required double withdrawAmount,
+  });
 }

@@ -56,8 +56,8 @@ Future<void> setUpDependencies() async {
   //  Register WebSocketChannel first
   sl.registerLazySingleton<WebSocketChannel>(() {
     final channel = WebSocketChannel.connect(
-      // Uri.parse('ws://192.168.1.3:8080'),
-      Uri.parse('ws://172.20.10.2:8080'),
+      Uri.parse('ws://192.168.1.3:8080'),
+      // Uri.parse('ws://172.20.10.2:8080'),
     );
     return channel;
   }, dispose: (channel) => channel.sink.close());
