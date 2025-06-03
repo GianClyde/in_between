@@ -8,3 +8,5 @@ class RoomFetch extends RoomEvent {
 
   RoomFetch({required this.roomId});
 }
+
+class RoomUpdate extends RoomEvent {}

@@ -12,6 +12,7 @@ import 'package:in_between/features/profile/presentation/bloc/user_profile_bloc.
 import 'package:in_between/features/registration/data/repository/registration_repo_imp.dart';
 import 'package:in_between/features/registration/domain/repository/i_reg_repo.dart';
 import 'package:in_between/features/registration/presentation/bloc/registration_bloc.dart';
+import 'package:in_between/features/room/presentation/bloc/room_bloc.dart';
 import 'package:in_between/features/wallet/presentation/bloc/wallet_bloc.dart';
 
 void main() async {
@@ -46,6 +47,7 @@ class MyApp extends StatelessWidget {
         BlocProvider<UserCubit>(create: (context) => sl<UserCubit>()),
         BlocProvider(create: (context) => sl<WalletBloc>()),
         BlocProvider(create: (context) => sl<HomeBloc>()),
+        BlocProvider(create: (context) => sl<RoomBloc>()),
       ],
       child: MaterialApp.router(
         debugShowCheckedModeBanner: false,

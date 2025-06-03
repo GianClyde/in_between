@@ -6,13 +6,36 @@ import 'package:in_between/features/home/data/models/room_model.dart';
 
 abstract interface class RoomRemoteDatasource {
   Future<RoomModel?> getRoomById({required String roomId});
+
+  Stream<RoomModel> get roomUpdates;
 }
 
 class RoomRemoteDatasourceImpl implements RoomRemoteDatasource {
   final WebSocketService _webSocket;
 
+  // Controller to emit room updates
+  final StreamController<RoomModel> _roomUpdatesController =
+      StreamController.broadcast();
+
   RoomRemoteDatasourceImpl({required WebSocketService webSocket})
-    : _webSocket = webSocket;
+    : _webSocket = webSocket {
+    _webSocket.stream.listen((message) {
+      try {
+        if (message['type'] == 'room_update') {
+          final roomData = message['room'];
+          if (roomData != null) {
+            final roomModel = RoomModel(
+              roomId: roomData['roomId'],
+              userList: roomData['userList'],
+            );
+            _roomUpdatesController.add(roomModel);
+          }
+        }
+      } catch (e) {
+        print("Error parsing room update: $e");
+      }
+    });
+  }
 
   @override
   Future<RoomModel?> getRoomById({required String roomId}) async {
@@ -26,7 +49,7 @@ class RoomRemoteDatasourceImpl implements RoomRemoteDatasource {
 
           if (data['type'] == 'get_room_result') {
             final room = data['room'];
-            print("USER: request contains ${room} ");
+            print("ROOM: request contains ${room} ");
 
             if (room != null) {
               final roomModel = RoomModel(
@@ -54,7 +77,7 @@ class RoomRemoteDatasourceImpl implements RoomRemoteDatasource {
         }
       });
 
-      _webSocket.send({'type': 'get_room', 'userId': roomId});
+      _webSocket.send({'type': 'get_room', 'roomId': roomId});
 
       return completer.future.timeout(
         const Duration(seconds: 5),
@@ -67,4 +90,7 @@ class RoomRemoteDatasourceImpl implements RoomRemoteDatasource {
       throw ServerException(message: e.toString());
     }
   }
+
+  @override
+  Stream<RoomModel> get roomUpdates => _roomUpdatesController.stream;
 }

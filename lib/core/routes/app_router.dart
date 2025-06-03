@@ -10,6 +10,8 @@ import 'package:in_between/features/home/presentation/bloc/home_bloc.dart';
 import 'package:in_between/features/home/presentation/screens/home_screen.dart';
 import 'package:in_between/features/profile/presentation/screens/profile_screen.dart';
 import 'package:in_between/features/registration/presentation/screens/registration_screen.dart';
+import 'package:in_between/features/room/presentation/screen/dummy_screen.dart';
+import 'package:in_between/features/room/presentation/screen/room_screen.dart';
 import 'package:in_between/features/wallet/presentation/bloc/wallet_bloc.dart';
 import 'package:in_between/features/wallet/presentation/screens/cash_in_out_screen.dart';
 
@@ -163,10 +165,11 @@ final GoRouter router = GoRouter(
           builder: (context, state) => ProfileScreen(),
         ),
         GoRoute(
-          path: "/${Routes.gameZoneScreen}/:roomId",
+          path: "/${Routes.roomScreen}/:roomId",
           builder: (context, state) {
             final roomId = state.pathParameters['roomId'] as String;
-            return GameZone(roomId: roomId);
+            //return WaitingRoomScreen(roomId: roomId);
+            return DummyScreen(roomId: roomId);
           },
         ),
       ],
@@ -181,5 +184,5 @@ class Routes {
   static const String loginScreen = '/loginScreen';
   static const String profileScreen = '/profileScreen';
   static const String registrationScreen = '/';
-  static const String gameZoneScreen = '/gameZoneScreen';
+  static const String roomScreen = '/roomScreen';
 }

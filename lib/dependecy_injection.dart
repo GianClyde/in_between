@@ -27,6 +27,12 @@ import 'package:in_between/features/registration/domain/repository/i_reg_repo.da
 import 'package:in_between/features/registration/domain/usecase/add_new_user_usecase.dart';
 import 'package:in_between/features/registration/domain/usecase/check_user_use_case.dart';
 import 'package:in_between/features/registration/presentation/bloc/registration_bloc.dart';
+import 'package:in_between/features/room/data/datasource/room_remote_datasource.dart';
+import 'package:in_between/features/room/data/repository/room_repository_impl.dart';
+import 'package:in_between/features/room/domain/repository/room_repository.dart';
+import 'package:in_between/features/room/domain/usecase/get_room_updates_usecase.dart';
+import 'package:in_between/features/room/domain/usecase/get_room_usecase.dart';
+import 'package:in_between/features/room/presentation/bloc/room_bloc.dart';
 import 'package:in_between/features/wallet/data/datasource/wallet_local_datasource.dart';
 import 'package:in_between/features/wallet/data/datasource/wallet_remote_datasource.dart';
 import 'package:in_between/features/wallet/data/repository/wallet_imp_repo.dart';
@@ -81,6 +87,9 @@ Future<void> setUpDependencies() async {
   sl.registerFactory<WalletRemoteDatasource>(
     () => WalletLocalDatasourceImpl(webSocketService: sl()),
   );
+  sl.registerFactory<RoomRemoteDatasource>(
+    () => RoomRemoteDatasourceImpl(webSocket: sl()),
+  );
 
   // Local data sources
   sl.registerLazySingleton(() => RegistrationLocalDatasource());
@@ -118,7 +127,9 @@ Future<void> setUpDependencies() async {
       walletRemoteDatasource: sl(),
     ),
   );
-
+  sl.registerLazySingleton<RoomRepository>(
+    () => RoomRepositoryImpl(roomRemoteDatasource: sl()),
+  );
   // Usecases
   sl.registerLazySingleton<AddNewUserUseCase>(() => AddNewUserUseCase(sl()));
   sl.registerLazySingleton<CheckUserUseCase>(() => CheckUserUseCase(sl()));
@@ -135,6 +146,8 @@ Future<void> setUpDependencies() async {
   );
   sl.registerLazySingleton(() => DepositWalletUsecase(iWalletRepo: sl()));
   sl.registerLazySingleton(() => WithdrawWalletUsecase(iWalletRepo: sl()));
+  sl.registerLazySingleton(() => GetRoomUsecase(roomRepository: sl()));
+  sl.registerLazySingleton(() => GetRoomUpdatesUsecase(roomRepository: sl()));
 
   // BLoCs & Cubits
   sl.registerFactory<RegistrationBloc>(() => RegistrationBloc(sl(), sl()));
@@ -154,5 +167,9 @@ Future<void> setUpDependencies() async {
       insertPlayerToRoomUsecase: sl(),
       removePlayerFromRoomUsecase: sl(),
     ),
+  );
+
+  sl.registerFactory<RoomBloc>(
+    () => RoomBloc(getRoomUsecase: sl(), getRoomUpdatesUsecase: sl()),
   );
 }

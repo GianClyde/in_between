@@ -25,4 +25,9 @@ class RoomRepositoryImpl implements RoomRepository {
       return left(Failure(message: e.toString()));
     }
   }
+
+  @override
+  Stream<RoomModel> getRoomUpdates() {
+    return roomRemoteDatasource.roomUpdates;
+  }
 }

@@ -17,4 +17,10 @@ class RoomFetchingFailed extends RoomState {
   RoomFetchingFailed({required this.message});
 }
 
+class RoomUpdateSuccess extends RoomState {
+  final Room room;
+
+  RoomUpdateSuccess({required this.room});
+}
+
 class RoomLoading extends RoomState {}
