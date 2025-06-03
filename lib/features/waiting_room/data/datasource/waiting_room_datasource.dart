@@ -1,5 +1,5 @@
 class WaitingRoomDatasource {
-  List<String> users = ['jenny', 'lisa', 'jisoo', 'rose', 'bangpd'];
+  List<String> users = ['jenny', 'lisa', 'jisoo', 'rose', 'bangpd', 'users'];
 
   //func to bato
 

@@ -9,6 +9,8 @@ import 'package:in_between/core/widgets/textbutton_widget.dart';
 import 'package:in_between/core/widgets/textfield_widget.dart';
 import 'package:in_between/features/registration/presentation/bloc/registration_bloc.dart';
 
+import '../widgets/date_picker_widget.dart';
+
 class RegistrationScreen extends StatefulWidget {
   const RegistrationScreen({super.key});
 
@@ -73,12 +75,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               isDigitOnly: false,
             ),
 
-            // TextFieldWidget(
-            //   controller: regBdateController,
-            //   tag: 'Birthdate',
-            //   label: 'Input Date',
-            //   isDigitOnly: true,
-            // ),
             TextFieldWidget(
               controller: regUsernameController,
               tag: 'Username',
@@ -106,6 +102,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               isDigitOnly: true,
             ),
 
+            Divider(height: 8, color: Colors.transparent),
             DropDownDatePickerWidget(
               onSelectedDate: (bdate) {
                 setState(() {
@@ -123,8 +120,28 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   final username = regUsernameController.text.trim();
                   final password = regPasswordController.text.trim();
                   final mobile = regmobilenumController.text.trim();
+
+                  if (selectedBdate == null) {
+                    print('Select date');
+                    return;
+                  }
+
+                  final now = DateTime.now();
+                  final age =
+                      now.year -
+                      selectedBdate!.year -
+                      ((now.month < selectedBdate!.month ||
+                              (now.month == selectedBdate!.month &&
+                                  now.day < selectedBdate!.day))
+                          ? 1
+                          : 0);
+                  if (age < 18) {
+                    print("should be at least 18");
+                    return;
+                  }
+
                   final bdate =
-                      '${selectedBdate!.year} - ${selectedBdate!.month} - ${selectedBdate!.day}';
+                      '${selectedBdate!.year}/${selectedBdate!.month}/${selectedBdate!.day}';
 
                   final email = regEmailController.text.trim();
 
@@ -147,7 +164,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         username: username,
                         mobile: mobile,
                         password: password,
-                        bdate: bdate.toString(),
+                        bdate: bdate,
                         credits: 0,
                         email: email,
                       ),
@@ -174,49 +191,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class DropDownDatePickerWidget extends StatefulWidget {
-  final void Function(DateTime) onSelectedDate;
-  const DropDownDatePickerWidget({super.key, required this.onSelectedDate});
-
-  @override
-  State<DropDownDatePickerWidget> createState() =>
-      _DropDownDatePickerWidgetState();
-}
-
-class _DropDownDatePickerWidgetState extends State<DropDownDatePickerWidget> {
-  DateTime selectedDate = DateTime.now();
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            '${selectedDate.year} - ${selectedDate.month} - ${selectedDate.day}',
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              final DateTime? dateTime = await showDatePicker(
-                context: context,
-                initialDate: selectedDate,
-                firstDate: DateTime(2000),
-                lastDate: DateTime.now(),
-              );
-              if (dateTime != null) {
-                setState(() {
-                  selectedDate = dateTime;
-                });
-                widget.onSelectedDate(dateTime);
-              }
-            },
-            child: Text('Date'),
-          ),
-        ],
       ),
     );
   }

@@ -48,7 +48,6 @@ class LoginScreen extends StatelessWidget {
               label: 'Username',
               isDigitOnly: false,
             ),
-            Divider(height: 18, color: Colors.transparent),
 
             PasswordTextfieldWidget(
               label: 'Password',

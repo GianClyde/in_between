@@ -42,7 +42,7 @@ class _PasswordTextfieldWidgetState extends State<PasswordTextfieldWidget> {
               controller: widget.passwordController,
               obscureText: _hidePassword,
               decoration: InputDecoration(
-                labelText: widget.label,
+                hintText: widget.label,
                 border: OutlineInputBorder(),
                 suffixIcon: IconButton(
                   onPressed: _togglePassVisibility,

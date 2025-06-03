@@ -34,7 +34,7 @@ class TextFieldWidget extends StatelessWidget {
                       ]
                       : [LengthLimitingTextInputFormatter(50)],
               decoration: InputDecoration(
-                labelText: label,
+                hintText: label,
                 border: OutlineInputBorder(),
               ),
             ),
