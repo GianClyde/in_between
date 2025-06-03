@@ -38,3 +38,9 @@ flutter:
 
   assets:
     - assets/images/
+    - assets/game_images/
+    - assets/lottie/
+    - assets/game_images/numbers/
+    - assets/game_images/cards/
+    - assets/game_images/holders/
+    - assets/game_images/buttons/
