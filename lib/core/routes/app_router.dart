@@ -165,11 +165,11 @@ final GoRouter router = GoRouter(
           builder: (context, state) => ProfileScreen(),
         ),
         GoRoute(
-          path: "/${Routes.roomScreen}/:roomId",
+          path: "${Routes.roomScreen}/:roomId",
           builder: (context, state) {
             final roomId = state.pathParameters['roomId'] as String;
-            //return WaitingRoomScreen(roomId: roomId);
-            return DummyScreen(roomId: roomId);
+            return WaitingRoomScreen(roomId: roomId);
+            // return DummyScreen(roomId: roomId);
           },
         ),
       ],

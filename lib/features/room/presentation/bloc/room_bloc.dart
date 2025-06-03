@@ -14,17 +14,23 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
   final GetRoomUsecase getRoomUsecase;
   final GetRoomUpdatesUsecase getRoomUpdatesUsecase;
 
-  StreamSubscription<RoomModel>? _roomUpdatesSubscription;
+  StreamSubscription<Room>? _roomUpdatesSubscription;
 
   RoomBloc({required this.getRoomUsecase, required this.getRoomUpdatesUsecase})
     : super(RoomInitial()) {
     on<RoomFetch>((event, emit) async {
       emit(RoomLoading());
       final response = await getRoomUsecase.execute(roomId: event.roomId);
-
+      print("ROOM: ${response}");
       response.fold(
-        (l) => emit(RoomFetchingFailed(message: l.message)),
-        (r) => emit(RoomFetchingSucces(room: r!)),
+        (l) {
+          print("ROOM ${l.message}");
+          emit(RoomFetchingFailed(message: l.message));
+        },
+        (r) {
+          print("ROOM ${r.toString()}");
+          emit(RoomFetchingSucces(room: r!));
+        },
       );
     });
 

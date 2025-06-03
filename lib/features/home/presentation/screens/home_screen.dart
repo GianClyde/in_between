@@ -29,10 +29,12 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     user = context.read<UserCubit>().state;
-    if (user != null) {
-      context.read<HomeBloc>().add(HomeFetchUserWallet(userId: user!.userId));
+    if (user == null) {
+      //context.read<UserCubit>().clear();
+      context.go(Routes.loginScreen);
+      return;
     }
-    //todo if null clear the user in cubit and redirect to login
+    context.read<HomeBloc>().add(HomeFetchUserWallet(userId: user!.userId));
   }
 
   @override
@@ -48,6 +50,10 @@ class _HomeScreenState extends State<HomeScreen> {
               walletText = state.userWallet.walletId;
             } else if (state is HomeUserWalletFetchedFailed) {
               walletText = "Failed to load wallet";
+            } else if (state is HomeJoinRoomSuccess) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                context.go('${Routes.roomScreen}/${state.roomId}');
+              });
             }
             return Text(
               "Welcome ${user!.username} || wallet $walletText",
@@ -104,8 +110,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         roomId: rooms[index].toString(),
                       ),
                     );
-
-                    context.go('${Routes.roomScreen}/${rooms[index]}');
                   },
                 ),
               );
@@ -173,7 +177,7 @@ class SliderBg extends StatelessWidget {
               ),
             ),
           ],
-        ), // dito maglalagay ng labels
+        ),
       ),
     );
   }

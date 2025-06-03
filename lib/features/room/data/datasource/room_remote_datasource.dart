@@ -1,8 +1,8 @@
 import 'dart:async';
-
 import 'package:in_between/core/error/server_exception.dart';
 import 'package:in_between/core/web_socket/web_socket.dart';
 import 'package:in_between/features/home/data/models/room_model.dart';
+import 'package:in_between/features/home/domain/entity/room.dart';
 
 abstract interface class RoomRemoteDatasource {
   Future<RoomModel?> getRoomById({required String roomId});
@@ -21,13 +21,14 @@ class RoomRemoteDatasourceImpl implements RoomRemoteDatasource {
     : _webSocket = webSocket {
     _webSocket.stream.listen((message) {
       try {
-        if (message['type'] == 'room_update') {
+        if (message['type'] == 'room_updated') {
           final roomData = message['room'];
+          print(
+            "Room update received: $roomData, userlist: ${roomData?['userlist']}",
+          );
           if (roomData != null) {
-            final roomModel = RoomModel(
-              roomId: roomData['roomId'],
-              userList: roomData['userList'],
-            );
+            final roomModel = RoomModel.fromMap(roomData);
+            print("Deserialized userList: ${roomModel.userList}");
             _roomUpdatesController.add(roomModel);
           }
         }
@@ -49,30 +50,27 @@ class RoomRemoteDatasourceImpl implements RoomRemoteDatasource {
 
           if (data['type'] == 'get_room_result') {
             final room = data['room'];
-            print("ROOM: request contains ${room} ");
+            print(
+              "ROOM: request contains $room, userlist: ${room?['userlist']}",
+            );
 
             if (room != null) {
-              final roomModel = RoomModel(
-                roomId: room['roomId'],
-                userList: room['userList'],
-              );
-
+              final roomModel = RoomModel.fromMap(room);
+              print("Deserialized userList: ${roomModel.userList}");
               completer.complete(roomModel);
-              //Todo utilize fromJson sa model
             } else {
               completer.complete(null);
             }
 
             subscription.cancel();
           } else {
-            print("USER: other type");
+            print("ROOM: other type");
           }
         } catch (e) {
           if (!completer.isCompleted) {
             completer.completeError("Error decoding server response: $e");
             throw ServerException(message: e.toString());
           }
-
           subscription.cancel();
         }
       });

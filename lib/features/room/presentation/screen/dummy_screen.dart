@@ -24,16 +24,13 @@ class _DummyScreenState extends State<DummyScreen> {
     return BlocBuilder<RoomBloc, RoomState>(
       builder: (context, state) {
         if (state is RoomFetchingSucces) {
-          final players = state.room.userList;
-          return ListView.builder(
-            itemCount: players.length,
-            itemBuilder: (context, index) {
-              final player = players[index];
-              return ListTile(title: Text(player.username));
-            },
-          );
+          final players = state.room;
+          return Column(children: [Text("USERS: ${players.userList}")]);
+        } else if (state is RoomFetchingFailed) {
+          print("ROOM SCREEN ${state.message}");
+          return Center(child: Text(state.message));
         } else {
-          return CircularProgressIndicator();
+          return Center(child: CircularProgressIndicator());
         }
       },
     );

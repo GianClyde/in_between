@@ -1,4 +1,5 @@
 import 'package:in_between/features/home/data/models/room_model.dart';
+import 'package:in_between/features/home/domain/entity/room.dart';
 import 'package:in_between/features/room/domain/repository/room_repository.dart';
 
 class GetRoomUpdatesUsecase {
@@ -6,7 +7,7 @@ class GetRoomUpdatesUsecase {
 
   GetRoomUpdatesUsecase({required this.roomRepository});
 
-  Stream<RoomModel> execute() {
+  Stream<Room> execute() {
     return roomRepository.getRoomUpdates();
   }
 }

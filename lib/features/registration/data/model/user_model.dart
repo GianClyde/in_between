@@ -46,7 +46,7 @@ class UserModel extends UserEntity {
       name: map['name'] as String,
       mobile: map['mobile'] as String,
       bdate: map['bdate'] as String,
-      credits: map['credits'] as double,
+      credits: map['credit'] as double, // Changed from 'credits' to 'credit'
     );
   }
 

@@ -19,9 +19,10 @@ class RoomRepositoryImpl implements RoomRepository {
       if (room == null) {
         return left(Failure(message: "Room not found"));
       }
-
+      print("ROOM: RPO IMPL ${room}");
       return right(room);
     } catch (e) {
+      print("ROOM:ERRORRRR RPO IMPL ${e.toString()}");
       return left(Failure(message: e.toString()));
     }
   }
