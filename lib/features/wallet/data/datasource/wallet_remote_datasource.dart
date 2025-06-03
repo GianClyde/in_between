@@ -107,7 +107,7 @@ class WalletLocalDatasourceImpl implements WalletRemoteDatasource {
     _webSocketService.send({
       'type': 'withdraw_wallet',
       'walletId': userWalletId,
-      'depositAmount': withdrawAmount,
+      'withdrawAmount': withdrawAmount,
     });
 
     return completer.future.timeout(

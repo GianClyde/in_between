@@ -33,6 +33,7 @@ import 'package:in_between/features/wallet/data/repository/wallet_imp_repo.dart'
 import 'package:in_between/features/wallet/domain/repository/i_wallet_repo.dart';
 import 'package:in_between/features/wallet/domain/usecase/deposit_wallet_usecase.dart';
 import 'package:in_between/features/wallet/domain/usecase/update_credit_usecase.dart';
+import 'package:in_between/features/wallet/domain/usecase/withdraw_wallet_usecase.dart';
 import 'package:in_between/features/wallet/presentation/bloc/wallet_bloc.dart';
 
 import 'package:web_socket_channel/web_socket_channel.dart';
@@ -56,8 +57,8 @@ Future<void> setUpDependencies() async {
   //  Register WebSocketChannel first
   sl.registerLazySingleton<WebSocketChannel>(() {
     final channel = WebSocketChannel.connect(
-      Uri.parse('ws://192.168.1.3:8080'),
-      // Uri.parse('ws://172.20.10.2:8080'),
+      // Uri.parse('ws://192.168.1.3:8080'),
+      Uri.parse('ws://172.20.10.2:8080'),
     );
     return channel;
   }, dispose: (channel) => channel.sink.close());
@@ -133,6 +134,7 @@ Future<void> setUpDependencies() async {
     () => RemovePlayerFromRoomUsecase(playerRepository: sl()),
   );
   sl.registerLazySingleton(() => DepositWalletUsecase(iWalletRepo: sl()));
+  sl.registerLazySingleton(() => WithdrawWalletUsecase(iWalletRepo: sl()));
 
   // BLoCs & Cubits
   sl.registerFactory<RegistrationBloc>(() => RegistrationBloc(sl(), sl()));
@@ -140,7 +142,11 @@ Future<void> setUpDependencies() async {
   sl.registerFactory<UserProfileBloc>(() => UserProfileBloc(sl()));
   sl.registerFactory<UserCubit>(() => UserCubit());
   sl.registerFactory<WalletBloc>(
-    () => WalletBloc(updateCreditUsecase: sl(), depositWalletUsecase: sl()),
+    () => WalletBloc(
+      updateCreditUsecase: sl(),
+      depositWalletUsecase: sl(),
+      withdrawWalletUsecase: sl(),
+    ),
   );
   sl.registerFactory<HomeBloc>(
     () => HomeBloc(
