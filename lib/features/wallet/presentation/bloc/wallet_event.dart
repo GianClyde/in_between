@@ -4,7 +4,6 @@ part of 'wallet_bloc.dart';
 sealed class WalletEvent {}
 
 class CashIn extends WalletEvent {
-  // final String username;
   final UserEntity user;
   final double inputedCredit;
 
@@ -12,10 +11,10 @@ class CashIn extends WalletEvent {
 }
 
 class CashOut extends WalletEvent {
-  final String username;
-  final double credit;
+  final UserEntity user;
+  final double inputedCredit;
 
-  CashOut(this.username, this.credit);
+  CashOut(this.user, this.inputedCredit);
 }
 
 class IncompleteField extends WalletEvent {}

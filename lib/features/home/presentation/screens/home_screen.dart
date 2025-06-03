@@ -63,7 +63,7 @@ class HomeScreen extends StatelessWidget {
                 child: SliderBg(
                   index: rooms[index].toString(),
                   onPressed: () {
-                    context.go(Routes.gameZoneScreen);
+                    context.go(Routes.waitingRoomScreen);
                   },
                 ),
               );

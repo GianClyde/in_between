@@ -49,6 +49,7 @@ class ForgetpassScreen extends StatelessWidget {
                 tag: 'Input your Email',
                 label: 'Input Email',
                 controller: forgetpassUsernameController,
+                isDigitOnly: false,
               ),
 
               Divider(height: 100, color: Colors.transparent),

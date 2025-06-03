@@ -19,18 +19,15 @@ class WalletBloc extends Bloc<WalletEvent, WalletState> {
     });
 
     on<CashOut>((event, emit) async {
-      emit(CashOutSuccess());
+      final updatedCredit = event.user.copyWith(
+        credits: event.user.credits - event.inputedCredit,
+      );
+      updateCreditUsecase.execute(updatedCredit);
+      emit(CashOutSuccess(updatedCredit));
     });
 
     on<IncompleteField>((event, emit) async {
       emit(CashInFail());
     });
   }
-
-  //dito mag add and minus then call updateCredit from the repo
 }
-
-
-// final updatedUser = event.user.copyWith(
-//   credits: event.user.credits + event.inputedCredit,
-// );

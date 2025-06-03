@@ -5,6 +5,7 @@ class UserEntity {
   final String mobile;
   final String bdate;
   final double credits;
+  final String email;
 
   UserEntity({
     required this.username,
@@ -13,6 +14,7 @@ class UserEntity {
     required this.mobile,
     required this.bdate,
     required this.credits,
+    required this.email,
   });
 
   UserEntity copyWith({
@@ -22,6 +24,7 @@ class UserEntity {
     String? mobile,
     String? bdate,
     double? credits,
+    String? email,
   }) {
     return UserEntity(
       username: username ?? this.username,
@@ -30,6 +33,7 @@ class UserEntity {
       mobile: mobile ?? this.mobile,
       bdate: bdate ?? this.bdate,
       credits: credits ?? this.credits,
+      email: email ?? this.email,
     );
   }
 }

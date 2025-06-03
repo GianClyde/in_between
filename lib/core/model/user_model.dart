@@ -23,6 +23,9 @@ class UserModel extends HiveObject {
   @HiveField(5)
   double credits;
 
+  @HiveField(6)
+  String email;
+
   UserModel({
     required this.username,
     required this.password,
@@ -30,6 +33,7 @@ class UserModel extends HiveObject {
     required this.mobile,
     required this.bdate,
     required this.credits,
+    required this.email,
   });
 
   factory UserModel.fromEntity(UserEntity entity) {
@@ -40,6 +44,7 @@ class UserModel extends HiveObject {
       mobile: entity.mobile,
       bdate: entity.bdate,
       credits: entity.credits,
+      email: entity.email,
     );
   }
 
@@ -51,6 +56,7 @@ class UserModel extends HiveObject {
       mobile: mobile,
       bdate: bdate,
       credits: credits,
+      email: email,
     );
   }
 }

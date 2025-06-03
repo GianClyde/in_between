@@ -7,10 +7,11 @@ import 'package:in_between/core/cubit/user_cubit.dart';
 import 'package:in_between/core/routes/app_router.dart';
 import 'package:in_between/dependecy_injection.dart';
 import 'package:in_between/features/authentication/presentation/bloc/auth_bloc.dart';
-import 'package:in_between/features/profile/presentation/bloc/user_profile_bloc.dart';
+// import 'package:in_between/features/profile/presentation/bloc/user_profile_bloc.dart';
 import 'package:in_between/features/registration/data/repository/registration_repo_imp.dart';
 import 'package:in_between/features/registration/domain/repository/i_reg_repo.dart';
 import 'package:in_between/features/registration/presentation/bloc/registration_bloc.dart';
+import 'package:in_between/features/waiting_room/presentation/cubit/waiting_room_cubit.dart';
 import 'package:in_between/features/wallet/presentation/bloc/wallet_bloc.dart';
 
 void main() async {
@@ -41,9 +42,10 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider(create: (context) => sl<RegistrationBloc>()),
         BlocProvider(create: (context) => sl<AuthBloc>()),
-        BlocProvider(create: (context) => sl<UserProfileBloc>()),
+        // BlocProvider(create: (context) => sl<UserProfileBloc>()),
         BlocProvider<UserCubit>(create: (context) => sl<UserCubit>()),
         BlocProvider(create: (context) => sl<WalletBloc>()),
+        BlocProvider(create: (context) => sl<WaitingRoomCubit>()),
       ],
       child: MaterialApp.router(
         debugShowCheckedModeBanner: false,

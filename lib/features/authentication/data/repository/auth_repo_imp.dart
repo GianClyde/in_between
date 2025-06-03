@@ -8,10 +8,10 @@ class AuthenticationRepoImplementation implements IAuthenticationRepo {
 
   @override
   Future<UserEntity?> getUser(String username, String password) async {
-    var users =  localDatasource.getUsers();
+    final users = localDatasource.getUsers();
     final matchingUser = users.where(
       (user) => user.username == username && user.password == password,
-    ).toList();
+    );
 
     if (matchingUser.isEmpty) return null;
     return matchingUser.first.toEntity();

@@ -12,7 +12,9 @@ final class CashInSuccess extends WalletState {
 
 final class CashInFail extends WalletState {}
 
-final class CashOutSuccess extends WalletState {}
+final class CashOutSuccess extends WalletState {
+  final UserEntity credit;
+  CashOutSuccess(this.credit);
+}
 
 final class CashOutFail extends WalletState {}
-//di na-add tas successcashout

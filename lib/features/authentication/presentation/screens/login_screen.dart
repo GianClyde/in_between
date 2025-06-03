@@ -6,6 +6,7 @@ import 'package:in_between/core/cubit/user_cubit.dart';
 import 'package:in_between/core/routes/app_router.dart';
 import 'package:in_between/core/widgets/images.dart';
 import 'package:in_between/core/widgets/outlined_button_widget.dart';
+import 'package:in_between/core/widgets/password_textfield_widget.dart';
 import 'package:in_between/core/widgets/textbutton_widget.dart';
 import 'package:in_between/core/widgets/textfield_widget.dart';
 import 'package:in_between/features/authentication/presentation/bloc/auth_bloc.dart';
@@ -45,12 +46,13 @@ class LoginScreen extends StatelessWidget {
             TextFieldWidget(
               controller: loginUsernameController,
               label: 'Username',
+              isDigitOnly: false,
             ),
-            Divider(height: 21, color: Colors.transparent),
+            Divider(height: 18, color: Colors.transparent),
 
-            TextFieldWidget(
-              controller: loginPasswordController,
+            PasswordTextfieldWidget(
               label: 'Password',
+              passwordController: loginPasswordController,
             ),
 
             Padding(

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:in_between/core/cubit/user_cubit.dart';
-import 'package:in_between/core/routes/app_router.dart';
 import 'package:in_between/core/widgets/bank_logo_card.dart';
 import 'package:in_between/core/widgets/images.dart';
 import 'package:in_between/core/widgets/outlined_button_widget.dart';
@@ -32,31 +30,7 @@ class CashInOutScreen extends StatelessWidget {
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Expanded(
-                  flex: 1,
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: SizedBox(
-                      width: 50,
-                      height: 50,
-                      child: IconButton(
-                        onPressed: () {
-                          context.pop(Routes.homeScreen);
-                        },
-                        icon: Icon(
-                          Icons.arrow_back_ios_new,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            Text('CASH IN/OUT', style: TextStyle(fontSize: 40)),
+            // Text('CASH IN/OUT', style: TextStyle(fontSize: 40)),
             Divider(height: 22, color: Colors.transparent),
 
             Row(
@@ -72,18 +46,24 @@ class CashInOutScreen extends StatelessWidget {
             TextFieldWidget(
               label: 'Account Number',
               controller: accNumberController,
+              isDigitOnly: true,
             ),
             TextFieldWidget(
               label: 'Account Name',
               controller: accNameController,
+              isDigitOnly: false,
             ),
 
-            TextFieldWidget(label: 'Amount', controller: cashInOutAmount),
+            TextFieldWidget(
+              label: 'Amount',
+              controller: cashInOutAmount,
+              isDigitOnly: true,
+            ),
             Divider(height: 40, color: Colors.transparent),
             ButtonWidget(
               label: 'Cash In',
               onPressed: () {
-                print('cash in/out clicked');
+                print('cash in clicked');
                 final amount = cashInOutAmount.text.trim();
                 final accountNumber = accNumberController.text.trim();
                 final accountName = accNameController.text.trim();

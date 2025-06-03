@@ -1,4 +1,5 @@
 import 'package:in_between/core/domain/user_entity.dart';
+import 'package:in_between/core/model/user_model.dart';
 import 'package:in_between/features/registration/data/data_source/registration_local_datasource.dart';
 import 'package:in_between/features/registration/domain/repository/i_reg_repo.dart';
 
@@ -15,6 +16,10 @@ class RegistrationRepoImp implements IRegistrationRepo {
 
   @override
   Future<void> addUser(UserEntity user) async {
-     await localDatasource.addNewUser(user);
+    final toModel = UserModel.fromEntity(user);
+    await localDatasource.addNewUser(toModel);
   }
 }
+
+
+//usermodel na object tas yun i-pass
