@@ -24,9 +24,3 @@ class AuthenticationRepoImplementation implements IAuthenticationRepo {
     );
   }
 }
-
-//explain the to entity and factory shit
-
-
-//after model in every feature, how will i make every feature communicate
-//say registration and login models

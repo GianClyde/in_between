@@ -13,9 +13,7 @@ import 'package:in_between/features/profile/domain/repository/i_profile_repo.dar
 import 'package:in_between/features/profile/domain/usecase/update_email_usecase.dart';
 import 'package:in_between/features/profile/domain/usecase/update_mobilenum_usecase.dart';
 import 'package:in_between/features/profile/domain/usecase/update_pass_usecase.dart';
-// import 'package:in_between/features/profile/domain/usecase/update_pass_usecase.dart';
 import 'package:in_between/features/profile/domain/user_profile_repo.dart';
-// import 'package:in_between/features/profile/presentation/bloc/user_profile_bloc.dart';
 import 'package:in_between/features/registration/data/data_source/registration_local_datasource.dart';
 import 'package:in_between/features/registration/data/repository/registration_repo_imp.dart';
 import 'package:in_between/features/registration/domain/repository/i_reg_repo.dart';
@@ -92,7 +90,6 @@ Future<void> setUpDependencies() async {
   sl.registerFactory<AuthBloc>(
     () => AuthBloc(authenticateUserUsecase: sl(), getUserUsecase: sl()),
   );
-  // sl.registerFactory<UserProfileBloc>(() => UserProfileBloc(sl()));
   sl.registerFactory<UserCubit>(
     () => UserCubit(
       updateEmailUsecase: sl(),

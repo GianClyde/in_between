@@ -19,13 +19,4 @@ class RegistrationRepoImp implements IRegistrationRepo {
     final toModel = UserModel.fromEntity(user);
     await localDatasource.addNewUser(toModel);
   }
-
-  // @override
-  // Future<bool> userLegalAge(String bdate) async {
-  //   return localDatasource.getUsers().any()
-
-  // }
 }
-
-
-//usermodel na object tas yun i-pass

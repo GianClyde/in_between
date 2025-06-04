@@ -107,7 +107,7 @@ class ProfileScreen extends StatelessWidget {
                   );
                 },
                 isEditable: true,
-              ), //editable //pati username i guess
+              ), //editable
             ],
           ),
         ),

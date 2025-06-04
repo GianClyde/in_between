@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:in_between/core/cubit/user_cubit.dart';
-import 'package:in_between/core/widgets/bank_logo_card.dart';
+import 'package:in_between/features/wallet/presentation/widgets/bank_logo_card.dart';
 import 'package:in_between/core/widgets/images.dart';
 import 'package:in_between/core/widgets/outlined_button_widget.dart';
 import 'package:in_between/core/widgets/textfield_widget.dart';
@@ -30,7 +30,6 @@ class CashInOutScreen extends StatelessWidget {
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
-            // Text('CASH IN/OUT', style: TextStyle(fontSize: 40)),
             Divider(height: 22, color: Colors.transparent),
 
             Row(

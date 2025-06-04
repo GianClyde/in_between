@@ -1,6 +1,5 @@
 import 'package:in_between/features/authentication/domain/repository/i_auth_repo.dart';
 
-//vaidates the username and password
 class AuthenticateUserUsecase {
   final IAuthenticationRepo iAuthRepo;
   AuthenticateUserUsecase(this.iAuthRepo);

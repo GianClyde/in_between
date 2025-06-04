@@ -4,10 +4,7 @@ import 'package:in_between/core/model/user_model.dart';
 class AuthenticationLocalDatasource {
   final Box<UserModel> authBox = Hive.box<UserModel>('userBox');
 
-  //get registered users
   Iterable<UserModel> getUsers() {
     return authBox.values;
   }
-
-  //dito kukuha ng data
 }

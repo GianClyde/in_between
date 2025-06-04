@@ -44,8 +44,3 @@ class TextFieldWidget extends StatelessWidget {
     );
   }
 }
-
-
-//onTapOutside	PointerDownEventListener?	Called when tapped outside.
-//obscureText	bool	Hides input text (e.g., password).
-//obscuringCharacter	String	Character used to obscure text (default is •).

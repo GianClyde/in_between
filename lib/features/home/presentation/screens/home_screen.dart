@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:in_between/core/routes/app_router.dart';
-import 'package:in_between/core/widgets/history_tile.dart';
+import 'package:in_between/features/home/presentation/widgets/history_tile.dart';
 import 'package:in_between/core/widgets/images.dart';
 
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:transformer_page_view_tv/transformer_page_view.dart';
-// import 'package:vector_math/vector_math_64.dart' hide Colors;
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
@@ -28,30 +27,20 @@ class HomeScreen extends StatelessWidget {
             itemCount: rooms.length,
             transformer: PageTransformerBuilder(
               builder: (Widget child, TransformInfo info) {
-                double scale =
-                    1 - (0.15 * info.position!.abs()); // Shrink side cards
-                double depth = info.position! * -30; // Push side cards backward
-                double angle =
-                    info.position! * 0.12; // Slight rotation for perspective
+                double scale = 1 - (0.15 * info.position!.abs());
+                double depth = info.position! * -30;
+                double angle = info.position! * 0.12;
                 double offsetX = info.position! * -25;
 
                 return Transform(
                   alignment: Alignment.center,
                   transform:
                       Matrix4.identity()
-                        ..setEntry(3, 2, 0.001) // Perspective effect
-                        ..translate(
-                          offsetX,
-                          // info.position! * -30,
-                          0.2,
-                          depth,
-                        ) // Push cards backward
-                        ..rotateY(angle), // Slight horizontal tilt
+                        ..setEntry(3, 2, 0.001)
+                        ..translate(offsetX, 0.2, depth)
+                        ..rotateY(angle),
                   child: Opacity(
-                    opacity:
-                        info.position!.abs() > 1
-                            ? 0.5
-                            : 1, // Fade side cards a little
+                    opacity: info.position!.abs() > 1 ? 0.5 : 1,
                     child: Transform.scale(scale: scale, child: child),
                   ),
                 );
@@ -131,7 +120,7 @@ class SliderBg extends StatelessWidget {
               ),
             ),
           ],
-        ), // dito maglalagay ng labels
+        ),
       ),
     );
   }

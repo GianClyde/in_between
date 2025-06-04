@@ -37,18 +37,3 @@ class UserEntity {
     );
   }
 }
-
-
-// class UserEntity {
-//   final String? username;
-//   final double credits;
-
-//   UserEntity({required this.username, required this.credits});
-
-//   UserEntity copyWith({String? username, double? credits}) {
-//     return UserEntity(
-//       username: username ?? this.username,
-//       credits: credits ?? this.credits,
-//     );
-//   }
-// }
